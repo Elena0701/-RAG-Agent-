@@ -1,4 +1,4 @@
-# RAGTool 交付说明（第 5 号，v1.0 定稿）
+# RAGTool 交付说明
 
 对接《CUAD 合同审查 Agent：工程架构、工具接口与核心编排代码（修订版）》。
 本包只提供 `tools/rag_tool.py` 这一个类，三个方法：`prepare` / `retrieve` / `verify`。
@@ -12,9 +12,9 @@ rags_tool_package/
 │   ├── index.py                 # 字符分块 + 合同内 BM25
 │   ├── pdf_ingest.py            # PDF / TXT / JSON → 冻结文本与页码
 │   ├── coverage.py              # No 的覆盖充分性检查
-│   ├── semantic_review.py       # 语义核验提示词与输出 schema（v0.3 复用）
-│   ├── retrieval.py             # 分词与词表（v0.3 复用）
-│   ├── deepseek_client.py       # DeepSeek 客户端（v0.3 复用）
+│   ├── semantic_review.py       # 语义核验提示词与输出 schema
+│   ├── retrieval.py             # 分词与词表
+│   ├── deepseek_client.py       # DeepSeek 客户端
 │   └── categories.json          # 十一类类别与检索词表
 ├── tests/test_rag_tool.py       # 40 项契约测试
 ├── evaluation/evaluate_rag_tool.py  # CUAD 全量 Recall@K
@@ -61,7 +61,7 @@ verification = rag.verify(document_id=..., category=extraction["category"],
 | 空证据 | 一律不通过（`UNCERTAIN`），除非是 `No` + `SUFFICIENT` |
 | 类别 | 11 类，顺序与 4 号 `CATEGORIES` 一致；`retrieve` 的 `category` 参数为可选扩展 |
 
-## 4 需要 4 号配合的一点（重要）
+## 4 需要agent配合的一点
 
 `retrieve()` 只收到 `question` 时，检索质量取决于问句是否与固定模板逐字一致：
 
