@@ -1,0 +1,871 @@
+{
+  "split": "development",
+  "dataset_sha256": "7de21d2bb741ac939e2a839ef9640634a5e0f9f40ea2b82c6833baf7db33dab4",
+  "dataset_file": "train_separate_questions.json",
+  "config": {
+    "embedding_model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+    "embedding_revision": "b207367332321f8e44f96e224ef15bc607f4dbf0",
+    "chunk_size": 800,
+    "chunk_overlap": 120,
+    "chunk_strategy": "clause",
+    "search_unit": "chunk",
+    "hybrid_rrf_k": 60,
+    "hybrid_dense_weight": 1.0,
+    "hybrid_bm25_weight": 1.2,
+    "hybrid_dense_admission_threshold": 0.75
+  },
+  "candidate_k_per_channel": 20,
+  "returned_k": 5,
+  "documents": 74,
+  "document_titles": [
+    "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+    "NELNETINC_04_08_2020-EX-1-JOINT FILING AGREEMENT",
+    "MetLife, Inc. - Remarketing Agreement",
+    "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+    "OPERALTD_04_30_2020-EX-4.14-SERVICE AGREEMENT",
+    "GLOBALTECHNOLOGIESLTD_06_08_2020-EX-10.16-CONSULTING AGREEMENT",
+    "PfHospitalityGroupInc_20150923_10-12G_EX-10.1_9266710_EX-10.1_Franchise Agreement1",
+    "GALACTICOMMTECHNOLOGIESINC_11_07_1997-EX-10.46-WEB HOSTING AGREEMENT",
+    "VERICELCORP_08_06_2019-EX-10.10-SUPPLY AGREEMENT",
+    "FEDERATEDGOVERNMENTINCOMESECURITIESINC_04_28_2020-EX-99.SERV AGREE-SERVICES AGREEMENT_SECONDAMENDMENT",
+    "FuseMedicalInc_20190321_10-K_EX-10.43_11575454_EX-10.43_Distributor Agreement",
+    "ELECTRAMECCANICA VEHICLES CORP. - Manufacturing Agreement",
+    "NANOPHASETECHNOLOGIESCORP_11_01_2005-EX-99.1-DISTRIBUTOR AGREEMENT",
+    "AzulSa_20170303_F-1A_EX-10.3_9943903_EX-10.3_Maintenance Agreement1",
+    "SECURIANFUNDSTRUST_05_01_2012-EX-99.28.H.9-NET INVESTMENT INCOME MAINTENANCE AGREEMENT",
+    "WELLSFARGOMORTGAGEBACKEDSECURITIES2006-6TRUST_05_11_2006-EX-10.3-Yield Maintenance Agreement",
+    "BANGIINC_05_25_2005-EX-10-Premium Managed Hosting Agreement",
+    "AimmuneTherapeuticsInc_20200205_8-K_EX-10.3_11967170_EX-10.3_Development Agreement",
+    "HEALTHGATEDATACORP_11_24_1999-EX-10.1-HOSTING AND MANAGEMENT AGREEMENT (1)",
+    "ATMOSENERGYCORP_11_22_2002-EX-10.17-TRANSPORTATION SERVICE AGREEMENT",
+    "ReedsInc_20191113_10-Q_EX-10.4_11888303_EX-10.4_Development Agreement",
+    "NYLIACVARIABLEANNUITYSEPARATEACCOUNTIII_04_10_2020-EX-99.8.KK-SERVICE AGREEMENT",
+    "SLOVAKWIRELESSFINANCECOBV_03_28_2001-EX-4.(B)(II).3-Maintenance and support contract for SICAP(R) modules",
+    "ELFBEAUTY,INC_07_02_2020-EX-10.1-COOPERATION AGREEMENT",
+    "TcPipelinesLp_20160226_10-K_EX-99.12_9454048_EX-99.12_Transportation Agreement",
+    "MIDDLEBROOKPHARMACEUTICALS,INC_03_18_2010-EX-10.1-PROMOTION AGREEMENT",
+    "AtnInternationalInc_20191108_10-Q_EX-10.1_11878541_EX-10.1_Maintenance Agreement",
+    "SightLife Surgical, Inc. - STRATEGIC SALES _ MARKETING AGREEMENT",
+    "ENERGYXXILTD_05_08_2015-EX-10.13-Transportation AGREEMENT",
+    "ScansourceInc_20190822_10-K_EX-10.38_11793958_EX-10.38_Distributor Agreement1",
+    "NETGEAR,INC_04_21_2003-EX-10.16-DISTRIBUTOR AGREEMENT",
+    "UsioInc_20040428_SB-2_EX-10.11_1723988_EX-10.11_Affiliate Agreement 2",
+    "EmmisCommunicationsCorp_20191125_8-K_EX-10.6_11906433_EX-10.6_Marketing Agreement",
+    "Magenta Therapeutics, Inc. - Master Development and Manufacturing Agreement",
+    "GSVINC_05_15_1998-EX-10-SPONSORSHIP AGREEMENT",
+    "PareteumCorp_20081001_8-K_EX-99.1_2654808_EX-99.1_Hosting Agreement",
+    "LECLANCHÉ S.A. - JOINT DEVELOPMENT AND MARKETING AGREEMENT",
+    "TRANSPHORM,INC_02_14_2020-EX-10.12(1)-JOINT VENTURE AGREEMENT",
+    "BUFFALOWILDWINGSINC_06_05_1998-EX-10.3-FRANCHISE AGREEMENT",
+    "ReynoldsConsumerProductsInc_20200121_S-1A_EX-10.22_11948918_EX-10.22_Service Agreement",
+    "ArcaUsTreasuryFund_20200207_N-2_EX-99.K5_11971930_EX-99.K5_Development Agreement",
+    "BIOAMBERINC_04_10_2013-EX-10.34-DEVELOPMENT AGREEMENT - First Amendment",
+    "XACCT Technologies, Inc.SUPPORT AND MAINTENANCE AGREEMENT",
+    "OTISWORLDWIDECORP_04_03_2020-EX-10.4-INTELLECTUAL PROPERTY AGREEMENT by and among UNITED TECHNOLOGIES CORPORATION, OTIS WORLDWIDE CORPORATION and CARRIER ~1",
+    "LEGACYTECHNOLOGYHOLDINGS,INC_12_09_2005-EX-10.2-DISTRIBUTOR AGREEMENT",
+    "AIRTECHINTERNATIONALGROUPINC_05_08_2000-EX-10.4-FRANCHISE AGREEMENT",
+    "Loop Industries, Inc. - Marketing Agreement",
+    "HOLIDAYRVSUPERSTORESINC_04_15_2002-EX-10.13-ENDORSEMENT AGREEMENT",
+    "RangeResourcesLouisianaInc_20150417_8-K_EX-10.5_9045501_EX-10.5_Transportation Agreement",
+    "EhaveInc_20190515_20-F_EX-4.44_11678816_EX-4.44_License Agreement_ Reseller Agreement",
+    "BIOFRONTERAAG_04_29_2019-EX-4.17-SUPPLY AGREEMENT",
+    "TURNKEYCAPITAL,INC_07_20_2017-EX-1.1-Strategic Alliance Agreement",
+    "FIBROGENINC_10_01_2014-EX-10.11-COLLABORATION AGREEMENT",
+    "KNOWLABS,INC_08_15_2005-EX-10-INTELLECTUAL PROPERTY AGREEMENT",
+    "BNLFINANCIALCORP_03_30_2007-EX-10.8-OUTSOURCING AGREEMENT",
+    "OLDAPIWIND-DOWNLTD_01_08_2016-EX-1.3-AGENCY AGREEMENT1",
+    "ADIANUTRITION,INC_04_01_2005-EX-10.D2-RESELLER AGREEMENT",
+    "VISIUMTECHNOLOGIES,INC_10_20_2004-EX-10.20-DISTRIBUTOR AGREEMENT",
+    "BLACKSTONEGSOLONG-SHORTCREDITINCOMEFUND_05_11_2020-EX-99.(K)(1)-SERVICE AGREEMENT",
+    "SYKESHEALTHPLANSERVICESINC_04_24_1998-EX-10.14-OUTSOURCING AGREEMENT",
+    "RemarkHoldingsInc_20081114_10-Q_EX-10.24_2895649_EX-10.24_Content License Agreement",
+    "GluMobileInc_20070319_S-1A_EX-10.09_436630_EX-10.09_Content License Agreement2",
+    "GarrettMotionInc_20181001_8-K_EX-2.4_11364532_EX-2.4_Intellectual Property Agreement",
+    "TRANSMONTAIGNEPARTNERSLLC_03_13_2020-EX-10.9-SERVICES AGREEMENT",
+    "BERKELEYLIGHTS,INC_06_26_2020-EX-10.12-COLLABORATION AGREEMENT",
+    "BANUESTRAFINANCIALCORP_09_08_2006-EX-10.16-AGENCY AGREEMENT",
+    "2ThemartComInc_19990826_10-12G_EX-10.10_6700288_EX-10.10_Co-Branding Agreement_ Agency Agreement",
+    "MACY_S,INC_05_11_2020-EX-99.4-JOINT FILING AGREEMENT",
+    "PharmagenInc_20120803_8-KA_EX-10.1_7693204_EX-10.1_Endorsement Agreement",
+    "VnueInc_20150914_8-K_EX-10.1_9259571_EX-10.1_Promotion Agreement",
+    "KIROMICBIOPHARMA,INC_04_08_2020-EX-10.28-JOINT VENTURE AGREEMENT",
+    "MARSHALLHOLDINGSINTERNATIONAL,INC_04_14_2004-EX-10.15-ENDORSEMENT AGREEMENT",
+    "HYDRONTECHNOLOGIESINC_03_31_1997-EX-10.47-SPONSORSHIP AGREEMENT",
+    "BLUEROCKRESIDENTIALGROWTHREIT,INC_06_01_2016-EX-1.1-AGENCY AGREEMENT"
+  ],
+  "selected_policy": "structured_protected",
+  "profiles": {
+    "bm25": {
+      "gold_spans": 1032,
+      "recall@1": 0.3846899224806202,
+      "recall@5": 0.6928294573643411,
+      "position_exact@5": 0.6637596899224806,
+      "macro_recall@5": 0.7255617809107804,
+      "categories": {
+        "Document Name": {
+          "n": 75,
+          "r1": 6,
+          "r5": 22,
+          "exact5": 21,
+          "recall@5": 0.29333333333333333
+        },
+        "Parties": {
+          "n": 349,
+          "r1": 148,
+          "r5": 251,
+          "exact5": 251,
+          "recall@5": 0.7191977077363897
+        },
+        "Effective Date": {
+          "n": 61,
+          "r1": 7,
+          "r5": 37,
+          "exact5": 37,
+          "recall@5": 0.6065573770491803
+        },
+        "Expiration Date": {
+          "n": 73,
+          "r1": 43,
+          "r5": 56,
+          "exact5": 56,
+          "recall@5": 0.7671232876712328
+        },
+        "Governing Law": {
+          "n": 70,
+          "r1": 60,
+          "r5": 70,
+          "exact5": 68,
+          "recall@5": 1.0
+        },
+        "Audit Rights": {
+          "n": 130,
+          "r1": 32,
+          "r5": 72,
+          "exact5": 58,
+          "recall@5": 0.5538461538461539
+        },
+        "Agreement Date": {
+          "n": 71,
+          "r1": 17,
+          "r5": 53,
+          "exact5": 53,
+          "recall@5": 0.7464788732394366
+        },
+        "Insurance": {
+          "n": 112,
+          "r1": 28,
+          "r5": 77,
+          "exact5": 66,
+          "recall@5": 0.6875
+        },
+        "Termination For Convenience": {
+          "n": 28,
+          "r1": 15,
+          "r5": 23,
+          "exact5": 23,
+          "recall@5": 0.8214285714285714
+        },
+        "Renewal Term": {
+          "n": 42,
+          "r1": 25,
+          "r5": 33,
+          "exact5": 32,
+          "recall@5": 0.7857142857142857
+        },
+        "Notice Period To Terminate Renewal": {
+          "n": 21,
+          "r1": 16,
+          "r5": 21,
+          "exact5": 20,
+          "recall@5": 1.0
+        }
+      }
+    },
+    "dense_raw": {
+      "gold_spans": 1032,
+      "recall@1": 0.16375968992248063,
+      "recall@5": 0.44089147286821706,
+      "position_exact@5": 0.42248062015503873,
+      "macro_recall@5": 0.5223386775634893,
+      "categories": {
+        "Document Name": {
+          "n": 75,
+          "r1": 2,
+          "r5": 18,
+          "exact5": 18,
+          "recall@5": 0.24
+        },
+        "Parties": {
+          "n": 349,
+          "r1": 27,
+          "r5": 120,
+          "exact5": 120,
+          "recall@5": 0.3438395415472779
+        },
+        "Effective Date": {
+          "n": 61,
+          "r1": 4,
+          "r5": 12,
+          "exact5": 12,
+          "recall@5": 0.19672131147540983
+        },
+        "Expiration Date": {
+          "n": 73,
+          "r1": 23,
+          "r5": 51,
+          "exact5": 51,
+          "recall@5": 0.6986301369863014
+        },
+        "Governing Law": {
+          "n": 70,
+          "r1": 33,
+          "r5": 60,
+          "exact5": 59,
+          "recall@5": 0.8571428571428571
+        },
+        "Audit Rights": {
+          "n": 130,
+          "r1": 23,
+          "r5": 58,
+          "exact5": 47,
+          "recall@5": 0.4461538461538462
+        },
+        "Agreement Date": {
+          "n": 71,
+          "r1": 7,
+          "r5": 20,
+          "exact5": 20,
+          "recall@5": 0.28169014084507044
+        },
+        "Insurance": {
+          "n": 112,
+          "r1": 11,
+          "r5": 47,
+          "exact5": 42,
+          "recall@5": 0.41964285714285715
+        },
+        "Termination For Convenience": {
+          "n": 28,
+          "r1": 7,
+          "r5": 16,
+          "exact5": 16,
+          "recall@5": 0.5714285714285714
+        },
+        "Renewal Term": {
+          "n": 42,
+          "r1": 21,
+          "r5": 35,
+          "exact5": 34,
+          "recall@5": 0.8333333333333334
+        },
+        "Notice Period To Terminate Renewal": {
+          "n": 21,
+          "r1": 11,
+          "r5": 18,
+          "exact5": 17,
+          "recall@5": 0.8571428571428571
+        }
+      }
+    },
+    "protected": {
+      "gold_spans": 1032,
+      "recall@1": 0.3846899224806202,
+      "recall@5": 0.6928294573643411,
+      "position_exact@5": 0.6637596899224806,
+      "macro_recall@5": 0.7255617809107804,
+      "categories": {
+        "Document Name": {
+          "n": 75,
+          "r1": 6,
+          "r5": 22,
+          "exact5": 21,
+          "recall@5": 0.29333333333333333
+        },
+        "Parties": {
+          "n": 349,
+          "r1": 148,
+          "r5": 251,
+          "exact5": 251,
+          "recall@5": 0.7191977077363897
+        },
+        "Effective Date": {
+          "n": 61,
+          "r1": 7,
+          "r5": 37,
+          "exact5": 37,
+          "recall@5": 0.6065573770491803
+        },
+        "Expiration Date": {
+          "n": 73,
+          "r1": 43,
+          "r5": 56,
+          "exact5": 56,
+          "recall@5": 0.7671232876712328
+        },
+        "Governing Law": {
+          "n": 70,
+          "r1": 60,
+          "r5": 70,
+          "exact5": 68,
+          "recall@5": 1.0
+        },
+        "Audit Rights": {
+          "n": 130,
+          "r1": 32,
+          "r5": 72,
+          "exact5": 58,
+          "recall@5": 0.5538461538461539
+        },
+        "Agreement Date": {
+          "n": 71,
+          "r1": 17,
+          "r5": 53,
+          "exact5": 53,
+          "recall@5": 0.7464788732394366
+        },
+        "Insurance": {
+          "n": 112,
+          "r1": 28,
+          "r5": 77,
+          "exact5": 66,
+          "recall@5": 0.6875
+        },
+        "Termination For Convenience": {
+          "n": 28,
+          "r1": 15,
+          "r5": 23,
+          "exact5": 23,
+          "recall@5": 0.8214285714285714
+        },
+        "Renewal Term": {
+          "n": 42,
+          "r1": 25,
+          "r5": 33,
+          "exact5": 32,
+          "recall@5": 0.7857142857142857
+        },
+        "Notice Period To Terminate Renewal": {
+          "n": 21,
+          "r1": 16,
+          "r5": 21,
+          "exact5": 20,
+          "recall@5": 1.0
+        }
+      }
+    },
+    "rrf": {
+      "gold_spans": 1032,
+      "recall@1": 0.2693798449612403,
+      "recall@5": 0.5494186046511628,
+      "position_exact@5": 0.5300387596899225,
+      "macro_recall@5": 0.6401667650041022,
+      "categories": {
+        "Document Name": {
+          "n": 75,
+          "r1": 8,
+          "r5": 21,
+          "exact5": 21,
+          "recall@5": 0.28
+        },
+        "Parties": {
+          "n": 349,
+          "r1": 55,
+          "r5": 156,
+          "exact5": 156,
+          "recall@5": 0.4469914040114613
+        },
+        "Effective Date": {
+          "n": 61,
+          "r1": 7,
+          "r5": 28,
+          "exact5": 28,
+          "recall@5": 0.45901639344262296
+        },
+        "Expiration Date": {
+          "n": 73,
+          "r1": 44,
+          "r5": 59,
+          "exact5": 59,
+          "recall@5": 0.8082191780821918
+        },
+        "Governing Law": {
+          "n": 70,
+          "r1": 54,
+          "r5": 69,
+          "exact5": 67,
+          "recall@5": 0.9857142857142858
+        },
+        "Audit Rights": {
+          "n": 130,
+          "r1": 25,
+          "r5": 68,
+          "exact5": 56,
+          "recall@5": 0.5230769230769231
+        },
+        "Agreement Date": {
+          "n": 71,
+          "r1": 7,
+          "r5": 26,
+          "exact5": 26,
+          "recall@5": 0.36619718309859156
+        },
+        "Insurance": {
+          "n": 112,
+          "r1": 23,
+          "r5": 62,
+          "exact5": 58,
+          "recall@5": 0.5535714285714286
+        },
+        "Termination For Convenience": {
+          "n": 28,
+          "r1": 13,
+          "r5": 22,
+          "exact5": 22,
+          "recall@5": 0.7857142857142857
+        },
+        "Renewal Term": {
+          "n": 42,
+          "r1": 27,
+          "r5": 35,
+          "exact5": 34,
+          "recall@5": 0.8333333333333334
+        },
+        "Notice Period To Terminate Renewal": {
+          "n": 21,
+          "r1": 15,
+          "r5": 21,
+          "exact5": 20,
+          "recall@5": 1.0
+        }
+      }
+    },
+    "structured_protected": {
+      "gold_spans": 1032,
+      "recall@1": 0.5804263565891473,
+      "recall@5": 0.7858527131782945,
+      "position_exact@5": 0.7567829457364341,
+      "macro_recall@5": 0.7963541748435383,
+      "categories": {
+        "Document Name": {
+          "n": 75,
+          "r1": 52,
+          "r5": 57,
+          "exact5": 56,
+          "recall@5": 0.76
+        },
+        "Parties": {
+          "n": 349,
+          "r1": 243,
+          "r5": 301,
+          "exact5": 301,
+          "recall@5": 0.8624641833810889
+        },
+        "Effective Date": {
+          "n": 61,
+          "r1": 36,
+          "r5": 43,
+          "exact5": 43,
+          "recall@5": 0.7049180327868853
+        },
+        "Expiration Date": {
+          "n": 73,
+          "r1": 43,
+          "r5": 56,
+          "exact5": 56,
+          "recall@5": 0.7671232876712328
+        },
+        "Governing Law": {
+          "n": 70,
+          "r1": 60,
+          "r5": 70,
+          "exact5": 68,
+          "recall@5": 1.0
+        },
+        "Audit Rights": {
+          "n": 130,
+          "r1": 32,
+          "r5": 72,
+          "exact5": 58,
+          "recall@5": 0.5538461538461539
+        },
+        "Agreement Date": {
+          "n": 71,
+          "r1": 49,
+          "r5": 58,
+          "exact5": 58,
+          "recall@5": 0.8169014084507042
+        },
+        "Insurance": {
+          "n": 112,
+          "r1": 28,
+          "r5": 77,
+          "exact5": 66,
+          "recall@5": 0.6875
+        },
+        "Termination For Convenience": {
+          "n": 28,
+          "r1": 15,
+          "r5": 23,
+          "exact5": 23,
+          "recall@5": 0.8214285714285714
+        },
+        "Renewal Term": {
+          "n": 42,
+          "r1": 25,
+          "r5": 33,
+          "exact5": 32,
+          "recall@5": 0.7857142857142857
+        },
+        "Notice Period To Terminate Renewal": {
+          "n": 21,
+          "r1": 16,
+          "r5": 21,
+          "exact5": 20,
+          "recall@5": 1.0
+        }
+      }
+    },
+    "structured_rrf": {
+      "gold_spans": 1032,
+      "recall@1": 0.5687984496124031,
+      "recall@5": 0.7538759689922481,
+      "position_exact@5": 0.7344961240310077,
+      "macro_recall@5": 0.7757880933138718,
+      "categories": {
+        "Document Name": {
+          "n": 75,
+          "r1": 52,
+          "r5": 54,
+          "exact5": 54,
+          "recall@5": 0.72
+        },
+        "Parties": {
+          "n": 349,
+          "r1": 247,
+          "r5": 289,
+          "exact5": 289,
+          "recall@5": 0.828080229226361
+        },
+        "Effective Date": {
+          "n": 61,
+          "r1": 36,
+          "r5": 44,
+          "exact5": 44,
+          "recall@5": 0.7213114754098361
+        },
+        "Expiration Date": {
+          "n": 73,
+          "r1": 44,
+          "r5": 59,
+          "exact5": 59,
+          "recall@5": 0.8082191780821918
+        },
+        "Governing Law": {
+          "n": 70,
+          "r1": 54,
+          "r5": 69,
+          "exact5": 67,
+          "recall@5": 0.9857142857142858
+        },
+        "Audit Rights": {
+          "n": 130,
+          "r1": 25,
+          "r5": 68,
+          "exact5": 56,
+          "recall@5": 0.5230769230769231
+        },
+        "Agreement Date": {
+          "n": 71,
+          "r1": 51,
+          "r5": 55,
+          "exact5": 55,
+          "recall@5": 0.7746478873239436
+        },
+        "Insurance": {
+          "n": 112,
+          "r1": 23,
+          "r5": 62,
+          "exact5": 58,
+          "recall@5": 0.5535714285714286
+        },
+        "Termination For Convenience": {
+          "n": 28,
+          "r1": 13,
+          "r5": 22,
+          "exact5": 22,
+          "recall@5": 0.7857142857142857
+        },
+        "Renewal Term": {
+          "n": 42,
+          "r1": 27,
+          "r5": 35,
+          "exact5": 34,
+          "recall@5": 0.8333333333333334
+        },
+        "Notice Period To Terminate Renewal": {
+          "n": 21,
+          "r1": 15,
+          "r5": 21,
+          "exact5": 20,
+          "recall@5": 1.0
+        }
+      }
+    }
+  },
+  "diagnostics": {
+    "gold_spans": 1032,
+    "bm25_candidate20_hits": 906,
+    "dense_candidate20_hits": 651,
+    "union_candidate40_hits": 938,
+    "dense_rescues_bm25_at20": 31,
+    "union_hits_lost_by_protected_top5": 223,
+    "oracle_chunk_top5_hits": 1032
+  },
+  "failures": [],
+  "miss_examples": [
+    {
+      "document": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+      "category": "Document Name",
+      "gold_start": 307,
+      "gold_end": 343,
+      "in_candidate_union": true,
+      "dense_only_rescue": true
+    },
+    {
+      "document": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+      "category": "Parties",
+      "gold_start": 644,
+      "gold_end": 650,
+      "in_candidate_union": false,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+      "category": "Parties",
+      "gold_start": 625,
+      "gold_end": 636,
+      "in_candidate_union": false,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+      "category": "Parties",
+      "gold_start": 644,
+      "gold_end": 654,
+      "in_candidate_union": false,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+      "category": "Parties",
+      "gold_start": 492,
+      "gold_end": 507,
+      "in_candidate_union": false,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+      "category": "Effective Date",
+      "gold_start": 430,
+      "gold_end": 443,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT",
+      "category": "Expiration Date",
+      "gold_start": 7056,
+      "gold_end": 7264,
+      "in_candidate_union": true,
+      "dense_only_rescue": true
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Document Name",
+      "gold_start": 364,
+      "gold_end": 385,
+      "in_candidate_union": false,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Parties",
+      "gold_start": 651,
+      "gold_end": 686,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Parties",
+      "gold_start": 508,
+      "gold_end": 527,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Parties",
+      "gold_start": 720,
+      "gold_end": 749,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Expiration Date",
+      "gold_start": 88993,
+      "gold_end": 89332,
+      "in_candidate_union": true,
+      "dense_only_rescue": true
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Expiration Date",
+      "gold_start": 14190,
+      "gold_end": 14206,
+      "in_candidate_union": true,
+      "dense_only_rescue": true
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Insurance",
+      "gold_start": 35854,
+      "gold_end": 37243,
+      "in_candidate_union": false,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Insurance",
+      "gold_start": 38801,
+      "gold_end": 39193,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "MetLife, Inc. - Remarketing Agreement",
+      "category": "Insurance",
+      "gold_start": 35617,
+      "gold_end": 35843,
+      "in_candidate_union": true,
+      "dense_only_rescue": true
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Document Name",
+      "gold_start": 71,
+      "gold_end": 87,
+      "in_candidate_union": true,
+      "dense_only_rescue": true
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 169,
+      "gold_end": 193,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 341,
+      "gold_end": 343,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 449,
+      "gold_end": 485,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 733,
+      "gold_end": 787,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 675,
+      "gold_end": 688,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 198,
+      "gold_end": 245,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 368,
+      "gold_end": 392,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 406,
+      "gold_end": 439,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 247,
+      "gold_end": 271,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 341,
+      "gold_end": 356,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 694,
+      "gold_end": 730,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Parties",
+      "gold_start": 368,
+      "gold_end": 373,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    },
+    {
+      "document": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+      "category": "Agreement Date",
+      "gold_start": 138,
+      "gold_end": 153,
+      "in_candidate_union": true,
+      "dense_only_rescue": false
+    }
+  ],
+  "tool_output_parity_checked": true,
+  "elapsed_seconds": 4.203,
+  "limitations": "Retrospective: all official splits were previously inspected. No fresh holdout claim.",
+  "selection_rule": "max development micro Recall@5, macro Recall@5, Recall@1; fixed 20% hash split of train"
+}

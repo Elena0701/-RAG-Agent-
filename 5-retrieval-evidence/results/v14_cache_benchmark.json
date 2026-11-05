@@ -1,0 +1,12 @@
+{
+  "contract": "LohaCompanyltd_20191209_F-1_EX-10.16_11917878_EX-10.16_Supply Agreement",
+  "chars": 11475,
+  "chunks": 22,
+  "model_load_seconds": 2.1055,
+  "cold_seconds": 0.106,
+  "warm_seconds": 0.0012,
+  "speedup": 86.31,
+  "cold_cache_hit": false,
+  "warm_cache_hit": true,
+  "note": "Same process and model instance; only document-vector cache state changes."
+}
