@@ -1,0 +1,53 @@
+{
+  "policy_description": "固定测试用演示政策；不是行业惯例、法律标准或 CUAD 风险标签。JSON 写法属于 YAML 子集。六项政策均已接入判断程序。",
+  "allowed_governing_laws": ["California", "New York"],
+  "maximum_renewal_months": 12,
+  "notice_period_threshold_days": 60,
+  "day_basis": "AS_WRITTEN_DAYS",
+  "require_insurance_clause": true,
+  "require_audit_clause": true,
+  "flag_if_present": true,
+  "law_aliases": {
+    "State of California": "California",
+    "State of New York": "New York",
+    "State of Illinois": "Illinois"
+  },
+  "rules": {
+    "LAW-001": {
+      "category": "Governing Law",
+      "enabled": true,
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true
+    },
+    "RENEWAL-001": {
+      "category": "Renewal Term",
+      "enabled": true,
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true
+    },
+    "NOTICE-001": {
+      "category": "Notice Period To Terminate Renewal",
+      "enabled": true,
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true
+    },
+    "INS-001": {
+      "category": "Insurance",
+      "enabled": true,
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true
+    },
+    "AUDIT-001": {
+      "category": "Audit Rights",
+      "enabled": true,
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true
+    },
+    "TERM-001": {
+      "category": "Termination For Convenience",
+      "enabled": true,
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true
+    }
+  }
+}

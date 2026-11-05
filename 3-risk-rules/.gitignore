@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.py[cod]
+/local_notes/
+/tests/
+/docs/scope.md
+/docs/review_requirements.md
+/docs/合同审查Agent_工程架构与工具接口_修订版.md
