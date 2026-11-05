@@ -1,0 +1,101 @@
+[
+  {
+    "cat": "Document Name",
+    "n": 1,
+    "cov": 1,
+    "top1": "C6155",
+    "score": 7.464324,
+    "page": 1,
+    "snip": " Service Fee through bank remittance or other payment methods to the following account des"
+  },
+  {
+    "cat": "Parties",
+    "n": 4,
+    "cov": 4,
+    "top1": "C8944",
+    "score": 6.68132748,
+    "page": 1,
+    "snip": "ng or affecting Service Recipient, and will not violate any of its agreements with, or com"
+  },
+  {
+    "cat": "Agreement Date",
+    "n": 1,
+    "cov": 1,
+    "top1": "C14143",
+    "score": 10.21086213,
+    "page": 1,
+    "snip": "l become effective upon being affixed with both Parties' official seals.\n\n[The remainder o"
+  },
+  {
+    "cat": "Effective Date",
+    "n": 1,
+    "cov": 1,
+    "top1": "C13752",
+    "score": 12.81946071,
+    "page": 1,
+    "snip": "ns or any dispute on the interpretation, application or implementation of this Agreement, "
+  },
+  {
+    "cat": "Expiration Date",
+    "n": 1,
+    "cov": 1,
+    "top1": "C13242",
+    "score": 10.42382091,
+    "page": 1,
+    "snip": "ding upon the Parties. 13. Renewal\n\nThis Agreement shall be effective as of the date set f"
+  },
+  {
+    "cat": "Governing Law",
+    "n": 0,
+    "cov": 0,
+    "top1": "C12365",
+    "score": 6.75499862,
+    "page": 1,
+    "snip": "l is successfully sent. 5\n\n\n\n\n\nRise Education Group The address of each Party for notice p"
+  },
+  {
+    "cat": "Renewal Term",
+    "n": 1,
+    "cov": 1,
+    "top1": "C13242",
+    "score": 10.40666503,
+    "page": 1,
+    "snip": "ding upon the Parties. 13. Renewal\n\nThis Agreement shall be effective as of the date set f"
+  },
+  {
+    "cat": "Notice Period To Terminate Renewal",
+    "n": 0,
+    "cov": 0,
+    "top1": "C13242",
+    "score": 13.36921439,
+    "page": 1,
+    "snip": "ding upon the Parties. 13. Renewal\n\nThis Agreement shall be effective as of the date set f"
+  },
+  {
+    "cat": "Insurance",
+    "n": 0,
+    "cov": 0,
+    "top1": "C7922",
+    "score": 5.23787457,
+    "page": 1,
+    "snip": "ing or affecting Service Provider, and will not violate any of its agreements with, or com"
+  },
+  {
+    "cat": "Audit Rights",
+    "n": 0,
+    "cov": 0,
+    "top1": "C6558",
+    "score": 5.43308719,
+    "page": 1,
+    "snip": " Recipient does not obtain any intellectual property rights in respect of the Services by "
+  },
+  {
+    "cat": "Termination For Convenience",
+    "n": 0,
+    "cov": 0,
+    "top1": "C11116",
+    "score": 8.26441234,
+    "page": 1,
+    "snip": "liquidated damages or indemnification for losses against the other Party shall not be deem"
+  }
+]

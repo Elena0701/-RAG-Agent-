@@ -1,0 +1,7 @@
+# Exact top-level versions used for the reported experiments (Python 3.12).
+# Install this file for reproduction; requirements.txt remains the compatible range.
+numpy==2.5.4
+pypdf==6.21.4
+sentence-transformers==5.7.0
+torch==2.15.0
+transformers==5.22.1

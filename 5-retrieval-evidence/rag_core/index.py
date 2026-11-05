@@ -155,7 +155,22 @@ def split_units(chunks: list[dict], max_unit: int = 320) -> list[dict]:
     返回的单元带 ``parent`` 指向所属条款块，检索命中后回到父块返回，
     这样"搜得准"和"读得全"兼顾。
     """
+    if type(max_unit) is not int or max_unit <= 0:
+        raise ValueError("max_unit must be a positive integer")
     units: list[dict] = []
+
+    def append_range(chunk: dict, parent: int, text: str, start: int, end: int) -> None:
+        # Legal drafting sometimes contains a single sentence far above the
+        # target size.  Hard-slice that exceptional range so max_unit remains
+        # a real bound rather than a best-effort hint.
+        cursor = start
+        while cursor < end:
+            piece_end = min(cursor + max_unit, end)
+            units.append({"start": chunk["start"] + cursor,
+                          "end": chunk["start"] + piece_end,
+                          "text": text[cursor:piece_end], "parent": parent})
+            cursor = piece_end
+
     for parent, chunk in enumerate(chunks):
         text = chunk["text"]
         cuts = [0] + [m.end() for m in _UNIT_BREAK.finditer(text)] + [len(text)]
@@ -164,15 +179,11 @@ def split_units(chunks: list[dict], max_unit: int = 320) -> list[dict]:
         previous = cuts[0]
         for boundary in cuts[1:]:
             if boundary - start > max_unit and previous > start:
-                units.append({"start": chunk["start"] + start,
-                              "end": chunk["start"] + previous,
-                              "text": text[start:previous], "parent": parent})
+                append_range(chunk, parent, text, start, previous)
                 start = previous
             previous = boundary
         if previous > start:
-            units.append({"start": chunk["start"] + start,
-                          "end": chunk["start"] + previous,
-                          "text": text[start:previous], "parent": parent})
+            append_range(chunk, parent, text, start, previous)
     return [unit for unit in units if unit["text"].strip()]
 
 

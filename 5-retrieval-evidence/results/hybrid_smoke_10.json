@@ -1,0 +1,162 @@
+{
+  "as-agent": {
+    "config": {
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "top_k": 5,
+      "threshold": 0.8,
+      "query_mode": "as-agent",
+      "chunk_strategy": "clause",
+      "search_unit": "chunk",
+      "retrieval_mode": "embedding",
+      "embedding_model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+      "embedding_revision": "b207367332321f8e44f96e224ef15bc607f4dbf0",
+      "hybrid_enabled": true,
+      "hybrid_dense_weight": 1.0,
+      "hybrid_bm25_weight": 1.2,
+      "hybrid_rrf_k": 60,
+      "hybrid_sparse_quota_ratio": 1.0,
+      "hybrid_dense_admission_threshold": 0.65,
+      "semantic_query_expansion": "auto",
+      "reranker_enabled": false,
+      "reranker_model": null
+    },
+    "contracts": 10,
+    "gold_spans": 124,
+    "micro": {
+      "recall@1": 0.3548,
+      "recall@3": 0.629,
+      "recall@5": 0.7097,
+      "exact@5": 0.7661,
+      "recall@10": 0.7097
+    },
+    "macro": {
+      "recall@5": 0.7379,
+      "exact@5": 0.7435
+    },
+    "elapsed_seconds": 3.6,
+    "categories": [
+      {
+        "category": "Agreement Date",
+        "contracts": 8,
+        "gold_spans": 8,
+        "recall@1": 0.125,
+        "recall@3": 0.625,
+        "recall@5": 0.75,
+        "exact@5": 0.875,
+        "recall@10": 0.75,
+        "contract@5": 0.75
+      },
+      {
+        "category": "Audit Rights",
+        "contracts": 3,
+        "gold_spans": 12,
+        "recall@1": 0.1667,
+        "recall@3": 0.5,
+        "recall@5": 0.5833,
+        "exact@5": 0.5,
+        "recall@10": 0.5833,
+        "contract@5": 1.0
+      },
+      {
+        "category": "Document Name",
+        "contracts": 10,
+        "gold_spans": 10,
+        "recall@1": 0.3,
+        "recall@3": 0.5,
+        "recall@5": 0.6,
+        "exact@5": 0.6,
+        "recall@10": 0.6,
+        "contract@5": 0.6
+      },
+      {
+        "category": "Effective Date",
+        "contracts": 8,
+        "gold_spans": 11,
+        "recall@1": 0.1818,
+        "recall@3": 0.1818,
+        "recall@5": 0.4545,
+        "exact@5": 0.4545,
+        "recall@10": 0.4545,
+        "contract@5": 0.375
+      },
+      {
+        "category": "Expiration Date",
+        "contracts": 9,
+        "gold_spans": 10,
+        "recall@1": 0.3,
+        "recall@3": 0.7,
+        "recall@5": 0.8,
+        "exact@5": 0.8,
+        "recall@10": 0.8,
+        "contract@5": 0.8889
+      },
+      {
+        "category": "Governing Law",
+        "contracts": 9,
+        "gold_spans": 9,
+        "recall@1": 0.8889,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "exact@5": 1.0,
+        "recall@10": 1.0,
+        "contract@5": 1.0
+      },
+      {
+        "category": "Insurance",
+        "contracts": 4,
+        "gold_spans": 8,
+        "recall@1": 0.375,
+        "recall@3": 0.625,
+        "recall@5": 0.625,
+        "exact@5": 0.625,
+        "recall@10": 0.625,
+        "contract@5": 0.75
+      },
+      {
+        "category": "Notice Period To Terminate Renewal",
+        "contracts": 2,
+        "gold_spans": 3,
+        "recall@1": 0.6667,
+        "recall@3": 1.0,
+        "recall@5": 1.0,
+        "exact@5": 1.0,
+        "recall@10": 1.0,
+        "contract@5": 1.0
+      },
+      {
+        "category": "Parties",
+        "contracts": 10,
+        "gold_spans": 43,
+        "recall@1": 0.3023,
+        "recall@3": 0.6744,
+        "recall@5": 0.7209,
+        "exact@5": 0.907,
+        "recall@10": 0.7209,
+        "contract@5": 0.8
+      },
+      {
+        "category": "Renewal Term",
+        "contracts": 3,
+        "gold_spans": 4,
+        "recall@1": 0.75,
+        "recall@3": 0.75,
+        "recall@5": 0.75,
+        "exact@5": 0.75,
+        "recall@10": 0.75,
+        "contract@5": 0.6667
+      },
+      {
+        "category": "Termination For Convenience",
+        "contracts": 4,
+        "gold_spans": 6,
+        "recall@1": 0.6667,
+        "recall@3": 0.6667,
+        "recall@5": 0.8333,
+        "exact@5": 0.6667,
+        "recall@10": 0.8333,
+        "contract@5": 1.0
+      }
+    ]
+  }
+}

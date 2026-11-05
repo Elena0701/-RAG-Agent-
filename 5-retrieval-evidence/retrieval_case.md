@@ -1,10 +1,10 @@
-# 一份真实合同的检索与证据定位案例（v1.0）
+# 一份真实合同的 BM25 基线检索案例（v1.0 留档）
 
 项目：基于 RAG 与规则核验的商业合同审查 Agent
-代码版本：`RAGTool` v1.0（字符分块 800/120，合同内 BM25，`prepare / retrieve / verify`）
+代码版本：`RAGTool` v1.0（字符分块 800/120，合同内 BM25，`prepare / retrieve / verify`）。当前 v1.4 为结构补充的混合检索；本页检索数字仅供旧版留档，不代表当前效果。No 示例已改成当前应有状态。
 
 > 这是**单合同开发演示**，用来展示字段、偏移和状态怎么流转，不是测试集成绩。
-> 全量结果见 `retrieval.md` §8（510 份合同、6480 个 gold span）。
+> 当前同口径回放见 retrieval.md §6；当前十一类接口演示可运行 demo.py，抽取与语义核验明确使用桩。
 
 ## 1 合同与运行条件
 
@@ -90,15 +90,18 @@ python3 demo.py                                      # 十一类冒烟（合成�
 未配置密钥时同一次调用会返回 `verification_status=UNCERTAIN`、
 `reason="语义核验未执行（MODEL_NOT_CONFIGURED）"`——工具不会把"没核验"写成"通过"。
 
-## 4 例二：Insurance 判 No —— 覆盖检查才决定能不能通过
+## 4 例二：Insurance 判 No —— 覆盖不能代替证据支持
 
 **情形 A：全文没有保险主题词（本案例合同）**
 
 ```json
-{"verification_status": "PASSED", "coverage_status": "SUFFICIENT",
- "reason": "全文未出现 Insurance 的锚定词，缺席判断有覆盖依据。",
- "coverage_detail": {"total_occurrences": 0, "covered_occurrences": 0}}
+{"verification_status": "UNCERTAIN", "coverage_status": "INSUFFICIENT",
+ "diagnostic_codes": ["NO_EVIDENCE", "COVERAGE_INSUFFICIENT"],
+ "coverage_detail": {"total_occurrences": 0, "covered_occurrences": 0,
+                     "basis": "NO_LEXICAL_ANCHOR"}}
 ```
+
+以上为当前应有的示意字段，不是旧版实测。零关键词可能是同义表达；即使关键词已覆盖，没有引用的 No 仍不能通过。
 
 **情形 B：全文提到保险，但这一轮没检索到（`LIMEENERGYCO_09_09_1999-EX-10-DISTRIBUTOR AGREEMENT`）**
 
@@ -136,15 +139,15 @@ python3 demo.py                                      # 十一类冒烟（合成�
 
 **没说明**：
 
-- 不是测试集成绩：本例 9/9 覆盖只是单份合同；默认条款分块的全量 Recall@5 是 0.713（`retrieval.md` §8）；
+- 不是测试集成绩：9/9 只是旧版单份合同；当前同口径回放见 retrieval.md §6；
 - 不是语义准确率：通过分支用的是桩，真实模型结论与人工判断都还没有独立标注；
-- 不代表长合同、扫描件、跨语言场景：见 `retrieval.md` §10、§12 的局限。
+- 不代表长合同、扫描件、跨语言场景：见 retrieval.md §7。
 
 ## 7 复现命令
 
 ```bash
 # 单合同（本案例）需要本地 CUADv1.json，用 --cuad 显式指定路径
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s tests -t . -v
 python3 evaluation/evaluate_rag_tool.py --limit 0 --cuad /path/to/CUADv1.json \
   --out results/eval_k5.json
 ```

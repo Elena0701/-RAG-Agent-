@@ -55,31 +55,32 @@ def absence_coverage(text: str, category: str, retrieved_spans: list[tuple[int, 
     occurrences = _occurrences(text, patterns)
     if not occurrences:
         return {
-            "status": "SUFFICIENT",
-            "reason": f"全文未出现 {category} 的锚定词，缺席判断有覆盖依据。",
+            "status": "INSUFFICIENT",
+            "reason": (f"全文未出现 {category} 的词法锚定词；这可能是同义表述或词表遗漏，"
+                       "不能仅据此确认条款不存在。"),
             "total_occurrences": 0,
             "covered_occurrences": 0,
             "uncovered": [],
             "anchors": patterns,
+            "basis": "NO_LEXICAL_ANCHOR",
         }
     uncovered = []
     covered = 0
     for start, end, term in occurrences:
-        if any(start < span_end and span_start < end for span_start, span_end in retrieved_spans):
+        if any(span_start <= start and end <= span_end for span_start, span_end in retrieved_spans):
             covered += 1
         elif len(uncovered) < max_reported:
-            uncovered.append({"term": term, "start": start, "end": end})
-        else:
             uncovered.append({"term": term, "start": start, "end": end})
     missing = len(occurrences) - covered
     if missing == 0:
         return {
             "status": "SUFFICIENT",
-            "reason": f"{category} 的 {len(occurrences)} 处锚定词均已被检索覆盖，未发现匹配条款。",
+            "reason": f"{category} 的 {len(occurrences)} 处锚定词均已被检索覆盖；这不代表条款不存在。",
             "total_occurrences": len(occurrences),
             "covered_occurrences": covered,
             "uncovered": [],
             "anchors": patterns,
+            "basis": "LEXICAL_ANCHOR_COVERAGE",
         }
     return {
         "status": "INSUFFICIENT",
@@ -89,4 +90,5 @@ def absence_coverage(text: str, category: str, retrieved_spans: list[tuple[int, 
         "covered_occurrences": covered,
         "uncovered": uncovered[:max_reported],
         "anchors": patterns,
+        "basis": "LEXICAL_ANCHOR_COVERAGE",
     }

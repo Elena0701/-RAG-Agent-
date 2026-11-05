@@ -1,0 +1,742 @@
+{
+  "as-agent": {
+    "config": {
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "top_k": 5,
+      "threshold": 0.8,
+      "query_mode": "as-agent",
+      "chunk_strategy": "clause",
+      "search_unit": "chunk"
+    },
+    "contracts": 510,
+    "gold_spans": 6480,
+    "micro": {
+      "recall@1": 0.4048,
+      "recall@3": 0.6218,
+      "recall@5": 0.7126,
+      "exact@5": 0.7443,
+      "recall@10": 0.7126
+    },
+    "macro": {
+      "recall@5": 0.7536,
+      "exact@5": 0.7502
+    },
+    "elapsed_seconds": 2.5,
+    "categories": [
+      {
+        "category": "Agreement Date",
+        "contracts": 470,
+        "gold_spans": 476,
+        "recall@1": 0.3277,
+        "recall@3": 0.6891,
+        "recall@5": 0.7899,
+        "exact@5": 0.8445,
+        "recall@10": 0.7899,
+        "contract@5": 0.7957
+      },
+      {
+        "category": "Audit Rights",
+        "contracts": 214,
+        "gold_spans": 643,
+        "recall@1": 0.2768,
+        "recall@3": 0.5163,
+        "recall@5": 0.6205,
+        "exact@5": 0.5521,
+        "recall@10": 0.6205,
+        "contract@5": 0.9112
+      },
+      {
+        "category": "Document Name",
+        "contracts": 510,
+        "gold_spans": 521,
+        "recall@1": 0.1152,
+        "recall@3": 0.263,
+        "recall@5": 0.3608,
+        "exact@5": 0.4031,
+        "recall@10": 0.3608,
+        "contract@5": 0.351
+      },
+      {
+        "category": "Effective Date",
+        "contracts": 390,
+        "gold_spans": 447,
+        "recall@1": 0.1432,
+        "recall@3": 0.3423,
+        "recall@5": 0.5324,
+        "exact@5": 0.5749,
+        "recall@10": 0.5324,
+        "contract@5": 0.5718
+      },
+      {
+        "category": "Expiration Date",
+        "contracts": 413,
+        "gold_spans": 466,
+        "recall@1": 0.5215,
+        "recall@3": 0.7296,
+        "recall@5": 0.7854,
+        "exact@5": 0.779,
+        "recall@10": 0.7854,
+        "contract@5": 0.8329
+      },
+      {
+        "category": "Governing Law",
+        "contracts": 437,
+        "gold_spans": 464,
+        "recall@1": 0.9116,
+        "recall@3": 0.9784,
+        "recall@5": 0.9892,
+        "exact@5": 0.9763,
+        "recall@10": 0.9892,
+        "contract@5": 0.9931
+      },
+      {
+        "category": "Insurance",
+        "contracts": 166,
+        "gold_spans": 559,
+        "recall@1": 0.3131,
+        "recall@3": 0.6279,
+        "recall@5": 0.7567,
+        "exact@5": 0.678,
+        "recall@10": 0.7567,
+        "contract@5": 0.9277
+      },
+      {
+        "category": "Notice Period To Terminate Renewal",
+        "contracts": 111,
+        "gold_spans": 122,
+        "recall@1": 0.7787,
+        "recall@3": 0.9262,
+        "recall@5": 0.959,
+        "exact@5": 0.9098,
+        "recall@10": 0.959,
+        "contract@5": 0.973
+      },
+      {
+        "category": "Parties",
+        "contracts": 509,
+        "gold_spans": 2327,
+        "recall@1": 0.4001,
+        "recall@3": 0.6201,
+        "recall@5": 0.7078,
+        "exact@5": 0.8182,
+        "recall@10": 0.7078,
+        "contract@5": 0.8527
+      },
+      {
+        "category": "Renewal Term",
+        "contracts": 176,
+        "gold_spans": 209,
+        "recall@1": 0.7464,
+        "recall@3": 0.8995,
+        "recall@5": 0.9378,
+        "exact@5": 0.8947,
+        "recall@10": 0.9378,
+        "contract@5": 0.9489
+      },
+      {
+        "category": "Termination For Convenience",
+        "contracts": 183,
+        "gold_spans": 246,
+        "recall@1": 0.5772,
+        "recall@3": 0.7724,
+        "recall@5": 0.8496,
+        "exact@5": 0.8211,
+        "recall@10": 0.8496,
+        "contract@5": 0.9126
+      }
+    ]
+  },
+  "with-category": {
+    "config": {
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "top_k": 5,
+      "threshold": 0.8,
+      "query_mode": "with-category",
+      "chunk_strategy": "clause",
+      "search_unit": "chunk"
+    },
+    "contracts": 510,
+    "gold_spans": 6480,
+    "micro": {
+      "recall@1": 0.4048,
+      "recall@3": 0.6218,
+      "recall@5": 0.7126,
+      "exact@5": 0.7443,
+      "recall@10": 0.7126
+    },
+    "macro": {
+      "recall@5": 0.7536,
+      "exact@5": 0.7502
+    },
+    "elapsed_seconds": 2.5,
+    "categories": [
+      {
+        "category": "Agreement Date",
+        "contracts": 470,
+        "gold_spans": 476,
+        "recall@1": 0.3277,
+        "recall@3": 0.6891,
+        "recall@5": 0.7899,
+        "exact@5": 0.8445,
+        "recall@10": 0.7899,
+        "contract@5": 0.7957
+      },
+      {
+        "category": "Audit Rights",
+        "contracts": 214,
+        "gold_spans": 643,
+        "recall@1": 0.2768,
+        "recall@3": 0.5163,
+        "recall@5": 0.6205,
+        "exact@5": 0.5521,
+        "recall@10": 0.6205,
+        "contract@5": 0.9112
+      },
+      {
+        "category": "Document Name",
+        "contracts": 510,
+        "gold_spans": 521,
+        "recall@1": 0.1152,
+        "recall@3": 0.263,
+        "recall@5": 0.3608,
+        "exact@5": 0.4031,
+        "recall@10": 0.3608,
+        "contract@5": 0.351
+      },
+      {
+        "category": "Effective Date",
+        "contracts": 390,
+        "gold_spans": 447,
+        "recall@1": 0.1432,
+        "recall@3": 0.3423,
+        "recall@5": 0.5324,
+        "exact@5": 0.5749,
+        "recall@10": 0.5324,
+        "contract@5": 0.5718
+      },
+      {
+        "category": "Expiration Date",
+        "contracts": 413,
+        "gold_spans": 466,
+        "recall@1": 0.5215,
+        "recall@3": 0.7296,
+        "recall@5": 0.7854,
+        "exact@5": 0.779,
+        "recall@10": 0.7854,
+        "contract@5": 0.8329
+      },
+      {
+        "category": "Governing Law",
+        "contracts": 437,
+        "gold_spans": 464,
+        "recall@1": 0.9116,
+        "recall@3": 0.9784,
+        "recall@5": 0.9892,
+        "exact@5": 0.9763,
+        "recall@10": 0.9892,
+        "contract@5": 0.9931
+      },
+      {
+        "category": "Insurance",
+        "contracts": 166,
+        "gold_spans": 559,
+        "recall@1": 0.3131,
+        "recall@3": 0.6279,
+        "recall@5": 0.7567,
+        "exact@5": 0.678,
+        "recall@10": 0.7567,
+        "contract@5": 0.9277
+      },
+      {
+        "category": "Notice Period To Terminate Renewal",
+        "contracts": 111,
+        "gold_spans": 122,
+        "recall@1": 0.7787,
+        "recall@3": 0.9262,
+        "recall@5": 0.959,
+        "exact@5": 0.9098,
+        "recall@10": 0.959,
+        "contract@5": 0.973
+      },
+      {
+        "category": "Parties",
+        "contracts": 509,
+        "gold_spans": 2327,
+        "recall@1": 0.4001,
+        "recall@3": 0.6201,
+        "recall@5": 0.7078,
+        "exact@5": 0.8182,
+        "recall@10": 0.7078,
+        "contract@5": 0.8527
+      },
+      {
+        "category": "Renewal Term",
+        "contracts": 176,
+        "gold_spans": 209,
+        "recall@1": 0.7464,
+        "recall@3": 0.8995,
+        "recall@5": 0.9378,
+        "exact@5": 0.8947,
+        "recall@10": 0.9378,
+        "contract@5": 0.9489
+      },
+      {
+        "category": "Termination For Convenience",
+        "contracts": 183,
+        "gold_spans": 246,
+        "recall@1": 0.5772,
+        "recall@3": 0.7724,
+        "recall@5": 0.8496,
+        "exact@5": 0.8211,
+        "recall@10": 0.8496,
+        "contract@5": 0.9126
+      }
+    ]
+  },
+  "question-only": {
+    "config": {
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "top_k": 5,
+      "threshold": 0.8,
+      "query_mode": "question-only",
+      "chunk_strategy": "clause",
+      "search_unit": "chunk"
+    },
+    "contracts": 510,
+    "gold_spans": 6480,
+    "micro": {
+      "recall@1": 0.1253,
+      "recall@3": 0.2682,
+      "recall@5": 0.3531,
+      "exact@5": 0.4653,
+      "recall@10": 0.3531
+    },
+    "macro": {
+      "recall@5": 0.4831,
+      "exact@5": 0.5082
+    },
+    "elapsed_seconds": 2.3,
+    "categories": [
+      {
+        "category": "Agreement Date",
+        "contracts": 470,
+        "gold_spans": 476,
+        "recall@1": 0.1639,
+        "recall@3": 0.4013,
+        "recall@5": 0.5378,
+        "exact@5": 0.584,
+        "recall@10": 0.5378,
+        "contract@5": 0.5404
+      },
+      {
+        "category": "Audit Rights",
+        "contracts": 214,
+        "gold_spans": 643,
+        "recall@1": 0.1509,
+        "recall@3": 0.3126,
+        "recall@5": 0.409,
+        "exact@5": 0.3717,
+        "recall@10": 0.409,
+        "contract@5": 0.6262
+      },
+      {
+        "category": "Document Name",
+        "contracts": 510,
+        "gold_spans": 521,
+        "recall@1": 0.094,
+        "recall@3": 0.2457,
+        "recall@5": 0.3858,
+        "exact@5": 0.453,
+        "recall@10": 0.3858,
+        "contract@5": 0.3765
+      },
+      {
+        "category": "Effective Date",
+        "contracts": 390,
+        "gold_spans": 447,
+        "recall@1": 0.1521,
+        "recall@3": 0.3557,
+        "recall@5": 0.5168,
+        "exact@5": 0.5481,
+        "recall@10": 0.5168,
+        "contract@5": 0.5667
+      },
+      {
+        "category": "Expiration Date",
+        "contracts": 413,
+        "gold_spans": 466,
+        "recall@1": 0.0708,
+        "recall@3": 0.1524,
+        "recall@5": 0.2189,
+        "exact@5": 0.2189,
+        "recall@10": 0.2189,
+        "contract@5": 0.2349
+      },
+      {
+        "category": "Governing Law",
+        "contracts": 437,
+        "gold_spans": 464,
+        "recall@1": 0.194,
+        "recall@3": 0.3599,
+        "recall@5": 0.444,
+        "exact@5": 0.431,
+        "recall@10": 0.444,
+        "contract@5": 0.4577
+      },
+      {
+        "category": "Insurance",
+        "contracts": 166,
+        "gold_spans": 559,
+        "recall@1": 0.2308,
+        "recall@3": 0.4919,
+        "recall@5": 0.6047,
+        "exact@5": 0.5564,
+        "recall@10": 0.6047,
+        "contract@5": 0.8916
+      },
+      {
+        "category": "Notice Period To Terminate Renewal",
+        "contracts": 111,
+        "gold_spans": 122,
+        "recall@1": 0.2787,
+        "recall@3": 0.4836,
+        "recall@5": 0.623,
+        "exact@5": 0.5902,
+        "recall@10": 0.623,
+        "contract@5": 0.6396
+      },
+      {
+        "category": "Parties",
+        "contracts": 509,
+        "gold_spans": 2327,
+        "recall@1": 0.0241,
+        "recall@3": 0.0872,
+        "recall@5": 0.1242,
+        "exact@5": 0.437,
+        "recall@10": 0.1242,
+        "contract@5": 0.1945
+      },
+      {
+        "category": "Renewal Term",
+        "contracts": 176,
+        "gold_spans": 209,
+        "recall@1": 0.5215,
+        "recall@3": 0.756,
+        "recall@5": 0.8278,
+        "exact@5": 0.7943,
+        "recall@10": 0.8278,
+        "contract@5": 0.8636
+      },
+      {
+        "category": "Termination For Convenience",
+        "contracts": 183,
+        "gold_spans": 246,
+        "recall@1": 0.2805,
+        "recall@3": 0.5122,
+        "recall@5": 0.622,
+        "exact@5": 0.6057,
+        "recall@10": 0.622,
+        "contract@5": 0.6831
+      }
+    ]
+  },
+  "vocab-only": {
+    "config": {
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "top_k": 5,
+      "threshold": 0.8,
+      "query_mode": "vocab-only",
+      "chunk_strategy": "clause",
+      "search_unit": "chunk"
+    },
+    "contracts": 510,
+    "gold_spans": 6480,
+    "micro": {
+      "recall@1": 0.4279,
+      "recall@3": 0.6414,
+      "recall@5": 0.7259,
+      "exact@5": 0.7503,
+      "recall@10": 0.7259
+    },
+    "macro": {
+      "recall@5": 0.7567,
+      "exact@5": 0.7497
+    },
+    "elapsed_seconds": 2.3,
+    "categories": [
+      {
+        "category": "Agreement Date",
+        "contracts": 470,
+        "gold_spans": 476,
+        "recall@1": 0.292,
+        "recall@3": 0.6597,
+        "recall@5": 0.7878,
+        "exact@5": 0.8424,
+        "recall@10": 0.7878,
+        "contract@5": 0.7915
+      },
+      {
+        "category": "Audit Rights",
+        "contracts": 214,
+        "gold_spans": 643,
+        "recall@1": 0.283,
+        "recall@3": 0.5443,
+        "recall@5": 0.6765,
+        "exact@5": 0.6003,
+        "recall@10": 0.6765,
+        "contract@5": 0.9579
+      },
+      {
+        "category": "Document Name",
+        "contracts": 510,
+        "gold_spans": 521,
+        "recall@1": 0.1305,
+        "recall@3": 0.238,
+        "recall@5": 0.2975,
+        "exact@5": 0.3282,
+        "recall@10": 0.2975,
+        "contract@5": 0.2863
+      },
+      {
+        "category": "Effective Date",
+        "contracts": 390,
+        "gold_spans": 447,
+        "recall@1": 0.1521,
+        "recall@3": 0.387,
+        "recall@5": 0.5526,
+        "exact@5": 0.5951,
+        "recall@10": 0.5526,
+        "contract@5": 0.5974
+      },
+      {
+        "category": "Expiration Date",
+        "contracts": 413,
+        "gold_spans": 466,
+        "recall@1": 0.515,
+        "recall@3": 0.7189,
+        "recall@5": 0.7725,
+        "exact@5": 0.7639,
+        "recall@10": 0.7725,
+        "contract@5": 0.8136
+      },
+      {
+        "category": "Governing Law",
+        "contracts": 437,
+        "gold_spans": 464,
+        "recall@1": 0.9138,
+        "recall@3": 0.9806,
+        "recall@5": 0.9871,
+        "exact@5": 0.9741,
+        "recall@10": 0.9871,
+        "contract@5": 0.9931
+      },
+      {
+        "category": "Insurance",
+        "contracts": 166,
+        "gold_spans": 559,
+        "recall@1": 0.3148,
+        "recall@3": 0.6476,
+        "recall@5": 0.7746,
+        "exact@5": 0.6923,
+        "recall@10": 0.7746,
+        "contract@5": 0.9518
+      },
+      {
+        "category": "Notice Period To Terminate Renewal",
+        "contracts": 111,
+        "gold_spans": 122,
+        "recall@1": 0.8033,
+        "recall@3": 0.9262,
+        "recall@5": 0.959,
+        "exact@5": 0.9098,
+        "recall@10": 0.959,
+        "contract@5": 0.973
+      },
+      {
+        "category": "Parties",
+        "contracts": 509,
+        "gold_spans": 2327,
+        "recall@1": 0.4637,
+        "recall@3": 0.6635,
+        "recall@5": 0.74,
+        "exact@5": 0.8363,
+        "recall@10": 0.74,
+        "contract@5": 0.8998
+      },
+      {
+        "category": "Renewal Term",
+        "contracts": 176,
+        "gold_spans": 209,
+        "recall@1": 0.7512,
+        "recall@3": 0.9139,
+        "recall@5": 0.9426,
+        "exact@5": 0.8995,
+        "recall@10": 0.9426,
+        "contract@5": 0.9545
+      },
+      {
+        "category": "Termination For Convenience",
+        "contracts": 183,
+        "gold_spans": 246,
+        "recall@1": 0.5772,
+        "recall@3": 0.7927,
+        "recall@5": 0.8333,
+        "exact@5": 0.8049,
+        "recall@10": 0.8333,
+        "contract@5": 0.8852
+      }
+    ]
+  },
+  "reworded": {
+    "config": {
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "top_k": 5,
+      "threshold": 0.8,
+      "query_mode": "reworded",
+      "chunk_strategy": "clause",
+      "search_unit": "chunk"
+    },
+    "contracts": 510,
+    "gold_spans": 6480,
+    "micro": {
+      "recall@1": 0.108,
+      "recall@3": 0.2347,
+      "recall@5": 0.3199,
+      "exact@5": 0.4338,
+      "recall@10": 0.3199
+    },
+    "macro": {
+      "recall@5": 0.4424,
+      "exact@5": 0.4687
+    },
+    "elapsed_seconds": 2.5,
+    "categories": [
+      {
+        "category": "Agreement Date",
+        "contracts": 470,
+        "gold_spans": 476,
+        "recall@1": 0.1029,
+        "recall@3": 0.3193,
+        "recall@5": 0.4538,
+        "exact@5": 0.4874,
+        "recall@10": 0.4538,
+        "contract@5": 0.4574
+      },
+      {
+        "category": "Audit Rights",
+        "contracts": 214,
+        "gold_spans": 643,
+        "recall@1": 0.1431,
+        "recall@3": 0.3142,
+        "recall@5": 0.3888,
+        "exact@5": 0.3593,
+        "recall@10": 0.3888,
+        "contract@5": 0.6308
+      },
+      {
+        "category": "Document Name",
+        "contracts": 510,
+        "gold_spans": 521,
+        "recall@1": 0.0806,
+        "recall@3": 0.2035,
+        "recall@5": 0.3301,
+        "exact@5": 0.3916,
+        "recall@10": 0.3301,
+        "contract@5": 0.3196
+      },
+      {
+        "category": "Effective Date",
+        "contracts": 390,
+        "gold_spans": 447,
+        "recall@1": 0.1387,
+        "recall@3": 0.311,
+        "recall@5": 0.4676,
+        "exact@5": 0.5034,
+        "recall@10": 0.4676,
+        "contract@5": 0.5077
+      },
+      {
+        "category": "Expiration Date",
+        "contracts": 413,
+        "gold_spans": 466,
+        "recall@1": 0.0601,
+        "recall@3": 0.1395,
+        "recall@5": 0.2017,
+        "exact@5": 0.2017,
+        "recall@10": 0.2017,
+        "contract@5": 0.2252
+      },
+      {
+        "category": "Governing Law",
+        "contracts": 437,
+        "gold_spans": 464,
+        "recall@1": 0.1509,
+        "recall@3": 0.2953,
+        "recall@5": 0.3879,
+        "exact@5": 0.3793,
+        "recall@10": 0.3879,
+        "contract@5": 0.3959
+      },
+      {
+        "category": "Insurance",
+        "contracts": 166,
+        "gold_spans": 559,
+        "recall@1": 0.2004,
+        "recall@3": 0.415,
+        "recall@5": 0.5581,
+        "exact@5": 0.5116,
+        "recall@10": 0.5581,
+        "contract@5": 0.8554
+      },
+      {
+        "category": "Notice Period To Terminate Renewal",
+        "contracts": 111,
+        "gold_spans": 122,
+        "recall@1": 0.2377,
+        "recall@3": 0.4508,
+        "recall@5": 0.582,
+        "exact@5": 0.5574,
+        "recall@10": 0.582,
+        "contract@5": 0.5946
+      },
+      {
+        "category": "Parties",
+        "contracts": 509,
+        "gold_spans": 2327,
+        "recall@1": 0.0198,
+        "recall@3": 0.0752,
+        "recall@5": 0.1104,
+        "exact@5": 0.4272,
+        "recall@10": 0.1104,
+        "contract@5": 0.1729
+      },
+      {
+        "category": "Renewal Term",
+        "contracts": 176,
+        "gold_spans": 209,
+        "recall@1": 0.5024,
+        "recall@3": 0.6938,
+        "recall@5": 0.7799,
+        "exact@5": 0.7512,
+        "recall@10": 0.7799,
+        "contract@5": 0.8068
+      },
+      {
+        "category": "Termination For Convenience",
+        "contracts": 183,
+        "gold_spans": 246,
+        "recall@1": 0.2642,
+        "recall@3": 0.4593,
+        "recall@5": 0.6057,
+        "exact@5": 0.5854,
+        "recall@10": 0.6057,
+        "contract@5": 0.6721
+      }
+    ]
+  }
+}

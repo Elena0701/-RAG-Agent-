@@ -114,21 +114,33 @@ def _ingest_pdf(path: Path) -> IngestResult:
         return _stdlib_pdf(path)
     try:
         reader = pypdf.PdfReader(str(path))
-        pieces, pages, offset = [], [], 0
+        normalized_pages: list[tuple[int, str]] = []
+        empty_pages = []
         for number, page in enumerate(reader.pages, start=1):
             content = page.extract_text() or ""
             if not content.strip():
+                empty_pages.append(number)
                 continue
-            piece = content + "\n\n"
+            # Each page is normalized before offsets are calculated.  A final
+            # whole-document normalization would otherwise shift every later
+            # page boundary and make page citations unreliable.
+            page_text = normalize_text(content).rstrip("\n")
+            if page_text:
+                normalized_pages.append((number, page_text))
+        pieces, pages, offset = [], [], 0
+        for index, (number, page_text) in enumerate(normalized_pages):
+            piece = page_text + ("\n\n" if index < len(normalized_pages) - 1 else "\n")
             pieces.append(piece)
             pages.append({"page": number, "start": offset, "end": offset + len(piece)})
             offset += len(piece)
     except Exception as exc:  # pypdf raises several unrelated types
         raise IngestError("PDF_PARSE_FAILED", f"pypdf could not parse the file ({type(exc).__name__})") from None
-    text = normalize_text("".join(pieces))
+    text = "".join(pieces)
     if not text.strip():
         raise IngestError("PDF_TEXT_EMPTY", "PDF contains no extractable text (scanned image?)")
-    return IngestResult(text=text, method="pypdf", pages=pages)
+    return IngestResult(text=text, method="pypdf", pages=pages,
+                        warnings=[f"pages_without_extractable_text:{','.join(map(str, empty_pages))}"]
+                        if empty_pages else [])
 
 
 _STREAM_RE = re.compile(rb"stream\r?\n(.*?)\r?\nendstream", re.S)
