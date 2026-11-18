@@ -1,0 +1,776 @@
+{
+  "policy_name": "IPO商业合同初筛演示政策",
+  "review_context": {
+    "scenario": "IPO商业合同初筛",
+    "subject": "发行人",
+    "users": [
+      "受托律师",
+      "券商尽调团队"
+    ]
+  },
+  "processing": {
+    "manual_review_on_uncertain": true,
+    "negative_requires_sufficient_coverage": true,
+    "preserve_fact_when_disabled": true,
+    "preserve_item_order": true
+  },
+  "sources": {
+    "project_policy": {
+      "title": "本项目商业合同初筛政策",
+      "role": "触发条件、演示阈值及风险等级配置",
+      "reference": "../docs/02审查政策文字化说明.md"
+    },
+    "cuad_definition": {
+      "title": "CUAD类别定义与标注",
+      "role": "类别、答案类型和证据口径",
+      "reference": "https://github.com/TheAtticusProject/cuad"
+    },
+    "review_checklist": {
+      "title": "外部合同审查清单",
+      "role": "补充关注理由与人工阅读维度",
+      "reference": "https://github.com/evolsb/claude-legal-skill"
+    }
+  },
+  "policies": {
+    "Renewal Term": {
+      "rule_id": "RENEWAL-001",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "DURATION_MONTHS_GT",
+      "parameters": {
+        "maximum_renewal_months": 12
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "按单次期限比较；整数年按12个月归一化，复杂期限转人工。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Notice Period To Terminate Renewal": {
+      "rule_id": "NOTICE-001",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "NOTICE_DAYS_GT",
+      "parameters": {
+        "notice_period_threshold_days": 60,
+        "day_basis": "AS_WRITTEN_DAYS"
+      },
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认退出续约提前期及天数口径；区分续约、补救和无因终止通知。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Governing Law": {
+      "rule_id": "LAW-001",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "LAW_NOT_IN_ALLOWLIST",
+      "parameters": {
+        "allowed_governing_laws": [
+          "California",
+          "New York"
+        ],
+        "law_aliases": {
+          "State of California": "California",
+          "State of New York": "New York",
+          "State of Illinois": "Illinois"
+        }
+      },
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "匹配法律选择地区，保留明确别名及地区限定；复合答案进一步复核。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Most Favored Nation": {
+      "rule_id": "CUAD-009",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认受益方、比较对象和适用条件。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Non-Compete": {
+      "rule_id": "CUAD-010",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认限制主体、地域、业务范围、期间及同意例外。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Exclusivity": {
+      "rule_id": "CUAD-011",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认排他方向、期间及允许的合作或交易。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "No-Solicit Of Customers": {
+      "rule_id": "CUAD-012",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认受限客户、交易行为、适用期间和例外。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Competitive Restriction Exception": {
+      "rule_id": "CUAD-013",
+      "mode": "CONTEXT_REVIEW",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {
+        "related_categories": [
+          "Non-Compete",
+          "Exclusivity",
+          "No-Solicit Of Customers"
+        ]
+      },
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": true,
+      "review_note": "结合竞业、排他性和客户招揽条款，确认例外适用范围。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "由人工结合关联内容确认权利义务及影响。"
+    },
+    "No-Solicit Of Employees": {
+      "rule_id": "CUAD-014",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认限制对象、期间，以及公开招聘或主动应聘等例外。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Non-Disparagement": {
+      "rule_id": "CUAD-015",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认适用主体、言论范围及相关例外。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Termination For Convenience": {
+      "rule_id": "TERM-001",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认权利方、通知、费用及对发行人的影响。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Rofr/Rofo/Rofn": {
+      "rule_id": "CUAD-017",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认具体权利种类、持有人、标的和行使程序。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Change Of Control": {
+      "rule_id": "CUAD-018",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认控制权变更定义、同意／通知／终止安排及豁免。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Anti-Assignment": {
+      "rule_id": "CUAD-019",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认转让条件、通知、同意及允许转让范围。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Revenue/Profit Sharing": {
+      "rule_id": "CUAD-020",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认分成方向、计算基数和支付条件；本轮使用存在性答案。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Price Restrictions": {
+      "rule_id": "CUAD-021",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认定价或调价限制的方向、频次、幅度及例外。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Minimum Commitment": {
+      "rule_id": "CUAD-022",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认最低金额／数量、周期及未达标后果；本轮使用存在性答案。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Volume Restriction": {
+      "rule_id": "CUAD-023",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认使用阈值、超额收费、同意条件及其他后果。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Ip Ownership Assignment": {
+      "rule_id": "CUAD-024",
+      "mode": "CONTEXT_REVIEW",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {
+        "related_categories": [
+          "License Grant",
+          "Joint Ip Ownership"
+        ]
+      },
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": true,
+      "review_note": "确认转移方向、标的、保留权利及相关许可。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "由人工结合关联内容确认权利义务及影响。"
+    },
+    "Joint Ip Ownership": {
+      "rule_id": "CUAD-025",
+      "mode": "CONTEXT_REVIEW",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {
+        "related_categories": [
+          "Ip Ownership Assignment",
+          "License Grant"
+        ]
+      },
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": true,
+      "review_note": "结合共有份额、成果定义和使用、收益及处分安排。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "由人工结合关联内容确认权利义务及影响。"
+    },
+    "License Grant": {
+      "rule_id": "CUAD-026",
+      "mode": "INFORMATION_ONLY",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {},
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": false,
+      "review_note": "展示授予事实；授权范围、权利链及业务适配性由人工进一步审查。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "按存在性结果展示事实，保留原文供进一步阅读。"
+    },
+    "Non-Transferable License": {
+      "rule_id": "CUAD-027",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认受限许可及允许转移情形。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Affiliate License-Licensor": {
+      "rule_id": "CUAD-028",
+      "mode": "INFORMATION_ONLY",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {},
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": false,
+      "review_note": "结合许可方关联企业定义、知识产权定义与实际授予条款。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "按存在性结果展示事实，保留原文供进一步阅读。"
+    },
+    "Affiliate License-Licensee": {
+      "rule_id": "CUAD-029",
+      "mode": "INFORMATION_ONLY",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {},
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": false,
+      "review_note": "确认被许可方关联企业范围及相应授权条件。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "按存在性结果展示事实，保留原文供进一步阅读。"
+    },
+    "Unlimited/All-You-Can-Eat-License": {
+      "rule_id": "CUAD-030",
+      "mode": "INFORMATION_ONLY",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {},
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": false,
+      "review_note": "确认无限使用范围及用途、地域、用户等限定；注意模板选项。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "按存在性结果展示事实，保留原文供进一步阅读。"
+    },
+    "Irrevocable Or Perpetual License": {
+      "rule_id": "CUAD-031",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "区分不可撤销与永久许可，确认受益方、期限和适用范围。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Source Code Escrow": {
+      "rule_id": "CUAD-032",
+      "mode": "REQUIRE_PRESENT",
+      "enabled": true,
+      "applicable": null,
+      "condition_type": null,
+      "parameters": {
+        "require_present": true
+      },
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "在明确适用的软件政策下检查存在性，进一步复核代码范围和释放条件。",
+      "applicability_note": "由所选合同政策明确是否要求源代码托管。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "仅在合同政策明确适用并要求存在时检查缺失。"
+    },
+    "Post-Termination Services": {
+      "rule_id": "CUAD-033",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认过渡、支付、移交、收尾等终止后义务及持续期间。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Audit Rights": {
+      "rule_id": "AUDIT-001",
+      "mode": "REQUIRE_PRESENT",
+      "enabled": true,
+      "applicable": null,
+      "condition_type": null,
+      "parameters": {
+        "require_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "在适用政策下检查存在性，进一步确认权利主体、对象和权限。",
+      "applicability_note": "由所选合同政策明确是否要求审计权。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "仅在合同政策明确适用并要求存在时检查缺失。"
+    },
+    "Uncapped Liability": {
+      "rule_id": "CUAD-035",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认责任主体、违约类型及上限例外。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Cap On Liability": {
+      "rule_id": "CUAD-036",
+      "mode": "CONTEXT_REVIEW",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {
+        "related_categories": [
+          "Uncapped Liability"
+        ]
+      },
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": true,
+      "review_note": "结合金额上限、索赔时间限制、无上限责任及适用例外。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "由人工结合关联内容确认权利义务及影响。"
+    },
+    "Liquidated Damages": {
+      "rule_id": "CUAD-037",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认赔偿或终止费用的触发事件、支付条件及金额。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Warranty Duration": {
+      "rule_id": "CUAD-038",
+      "mode": "INFORMATION_ONLY",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {},
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": false,
+      "review_note": "按总表Yes/No描述保修期限相关条款，原文中的具体期限供人工阅读。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "按存在性结果展示事实，保留原文供进一步阅读。"
+    },
+    "Insurance": {
+      "rule_id": "INS-001",
+      "mode": "REQUIRE_PRESENT",
+      "enabled": true,
+      "applicable": null,
+      "condition_type": null,
+      "parameters": {
+        "require_present": true
+      },
+      "risk_level": "MEDIUM",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "在适用政策下检查存在性，进一步复核主体、险种、保额及期间。",
+      "applicability_note": "由所选合同政策明确是否要求保险义务。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition",
+        "review_checklist"
+      ],
+      "rationale": "仅在合同政策明确适用并要求存在时检查缺失。"
+    },
+    "Covenant Not To Sue": {
+      "rule_id": "CUAD-040",
+      "mode": "FLAG_IF_CONDITION",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": "ANSWER_IS_YES",
+      "parameters": {
+        "flag_if_present": true
+      },
+      "risk_level": "LOW",
+      "manual_review_on_trigger": true,
+      "manual_review_on_context": false,
+      "review_note": "确认受限请求、知识产权争议及救济范围。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "以已核验事实命中预设条件，生成初筛风险提示；等级为本项目演示配置。"
+    },
+    "Third Party Beneficiary": {
+      "rule_id": "CUAD-041",
+      "mode": "CONTEXT_REVIEW",
+      "enabled": true,
+      "applicable": true,
+      "condition_type": null,
+      "parameters": {
+        "related_categories": []
+      },
+      "risk_level": null,
+      "manual_review_on_trigger": false,
+      "manual_review_on_context": true,
+      "review_note": "确认非签约受益人、可执行权利及对应义务。",
+      "applicability_note": "适用于本次选定类别的初筛政策。",
+      "source_ids": [
+        "project_policy",
+        "cuad_definition"
+      ],
+      "rationale": "由人工结合关联内容确认权利义务及影响。"
+    }
+  }
+}
