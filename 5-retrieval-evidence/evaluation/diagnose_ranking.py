@@ -96,14 +96,19 @@ def run(path, split, selected_policy=None):
             print(f'{split}: {number}/{len(docs)}', flush=True)
     reports = {}
     for name, categories in stats.items():
-        n = sum(r['n'] for r in categories.values())
+        for category in QUESTIONS:
+            categories[category]  # keep configured categories with no positive evidence
+        positive_categories = [r for r in categories.values() if r['n']]
+        n = sum(r['n'] for r in positive_categories)
+        if not n:
+            raise ValueError('No valid gold spans for this split')
         reports[name] = {
             'gold_spans': n,
             'recall@1': sum(r['r1'] for r in categories.values()) / n,
             'recall@5': sum(r['r5'] for r in categories.values()) / n,
             'position_exact@5': sum(r['exact5'] for r in categories.values()) / n,
-            'macro_recall@5': sum(r['r5']/r['n'] for r in categories.values()) / len(categories),
-            'categories': {c: {**r, 'recall@5': r['r5']/r['n']} for c,r in categories.items()},
+            'macro_recall@5': sum(r['r5']/r['n'] for r in positive_categories) / len(positive_categories),
+            'categories': {c: {**r, 'recall@5': r['r5']/r['n'] if r['n'] else None} for c,r in categories.items()},
         }
     choice = max(policies, key=lambda p: (reports[p]['recall@5'], reports[p]['macro_recall@5'], reports[p]['recall@1'])) if split == 'development' else selected_policy
     return {'split': split, 'dataset_sha256': hashlib.sha256(raw).hexdigest(),
@@ -113,7 +118,7 @@ def run(path, split, selected_policy=None):
                       'hybrid_rrf_k','hybrid_dense_weight','hybrid_bm25_weight',
                       'hybrid_dense_admission_threshold')},
             'candidate_k_per_channel': 20, 'returned_k': 5,
-            'documents': len(docs), 'document_titles': [d['title'] for d in docs],
+            'configured_categories': len(QUESTIONS), 'documents': len(docs), 'document_titles': [d['title'] for d in docs],
             'selected_policy': choice, 'profiles': reports, 'diagnostics': dict(diag),
             'failures': failures, 'miss_examples': misses,
             'tool_output_parity_checked': True,
@@ -125,13 +130,13 @@ def run(path, split, selected_policy=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--split', choices=['development', 'test_replay'], default='development')
-    parser.add_argument('--selection', type=Path, default=ROOT/'results/v14_development.json')
+    parser.add_argument('--selection', type=Path, default=ROOT/'results/cuad41_ranking_development.json')
     parser.add_argument('--out', type=Path)
     args = parser.parse_args()
     filename = 'train_separate_questions.json' if args.split == 'development' else 'test.json'
     policy = None if args.split == 'development' else json.loads(args.selection.read_text())['selected_policy']
     result = run(ROOT.parent/'data/cuad/source'/filename, args.split, policy)
-    out = args.out or ROOT/f'results/v14_{args.split}.json'
+    out = args.out or ROOT/f'results/cuad41_ranking_{args.split}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k in ('selected_policy','documents','diagnostics')}, indent=2))
