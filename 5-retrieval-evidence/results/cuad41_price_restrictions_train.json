@@ -1,0 +1,86 @@
+{
+  "as-agent": {
+    "dataset": {
+      "file": "train_separate_questions.json",
+      "sha256": "7de21d2bb741ac939e2a839ef9640634a5e0f9f40ea2b82c6833baf7db33dab4",
+      "split": "train_separate_questions",
+      "documents_evaluated": 408
+    },
+    "config": {
+      "chunk_size": 800,
+      "chunk_overlap": 120,
+      "top_k": 5,
+      "threshold": 0.8,
+      "query_mode": "as-agent",
+      "chunk_strategy": "clause",
+      "search_unit": "chunk",
+      "retrieval_mode": "embedding",
+      "embedding_model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+      "embedding_revision": "b207367332321f8e44f96e224ef15bc607f4dbf0",
+      "hybrid_enabled": true,
+      "ranking_policy": "structured_protected",
+      "hybrid_dense_weight": 1.0,
+      "hybrid_bm25_weight": 1.2,
+      "hybrid_rrf_k": 60,
+      "hybrid_sparse_quota_ratio": 1.0,
+      "hybrid_dense_admission_threshold": 0.75,
+      "semantic_query_expansion": "auto",
+      "reranker_enabled": false,
+      "reranker_model": null,
+      "reranker_revision": null,
+      "reported_k": [
+        1,
+        3,
+        5
+      ],
+      "primary_k": 5
+    },
+    "contracts": 408,
+    "category_count": 1,
+    "category_registry_sha256": "7bb45ab81713018657f3dd25d377b4f4e0284ce6af3e08e0e90cd4325cc156f4",
+    "categories_with_positive_spans": 1,
+    "positive_contract_category_pairs": 15,
+    "macro_denominator": "categories with at least one valid gold span",
+    "prepare_failures": [],
+    "retrieve_failures": [],
+    "exact_definition": "gold occurrence fully contained in one returned chunk at its annotated position",
+    "gold_spans": 27,
+    "micro": {
+      "recall@1": 0.1852,
+      "exact@1": 0.1852,
+      "recall@3": 0.3704,
+      "exact@3": 0.3333,
+      "recall@5": 0.4444,
+      "exact@5": 0.3704
+    },
+    "macro": {
+      "recall@1": 0.1852,
+      "exact@1": 0.1852,
+      "recall@3": 0.3704,
+      "exact@3": 0.3333,
+      "recall@5": 0.4444,
+      "exact@5": 0.3704
+    },
+    "elapsed_seconds": 11.6,
+    "categories": [
+      {
+        "category": "Price Restrictions",
+        "contracts": 15,
+        "contracts_with_question": 408,
+        "gold_spans": 27,
+        "hits@1": 5,
+        "recall@1": 0.1852,
+        "exact@1": 0.1852,
+        "contract@1": 0.3333,
+        "hits@3": 10,
+        "recall@3": 0.3704,
+        "exact@3": 0.3333,
+        "contract@3": 0.6,
+        "hits@5": 12,
+        "recall@5": 0.4444,
+        "exact@5": 0.3704,
+        "contract@5": 0.7333
+      }
+    ]
+  }
+}
