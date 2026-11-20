@@ -18,7 +18,11 @@ class RevisionTests(unittest.TestCase):
         self.assertEqual(list(inspect.signature(RAGTool.retrieve).parameters), ['self','document_id','query','top_k','category'])
         self.assertEqual(list(inspect.signature(RAGTool.verify).parameters),
                          ['self','document_id','category','category_answer','predicted_answers','retrieval_history','question'])
-        self.assertEqual(len(CATEGORY_NAMES), 11)
+        self.assertTrue({
+            "Document Name", "Parties", "Agreement Date", "Effective Date",
+            "Expiration Date", "Renewal Term", "Notice Period To Terminate Renewal",
+            "Governing Law", "Termination For Convenience", "Audit Rights", "Insurance",
+        }.issubset(CATEGORY_NAMES))
 
     def test_dense_query_does_not_receive_keyword_bag(self):
         tool = self.tool(retrieval_mode='embedding', embedder=FakeEmbedder(), hybrid_enabled=False)

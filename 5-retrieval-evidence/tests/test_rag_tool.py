@@ -356,7 +356,7 @@ class RetrieveTest(unittest.TestCase):
         self.assertEqual(result["status"], "FAILED")
 
     def test_unknown_explicit_category_is_rejected(self):
-        result = self.tool.retrieve("DOC-1", "find the clause", category="Cap On Liability")
+        result = self.tool.retrieve("DOC-1", "find the clause", category="Payment Schedule")
         self.assertEqual(result["status"], "FAILED")
         self.assertEqual(result["error_code"], "UNSUPPORTED_CATEGORY")
 
@@ -471,7 +471,7 @@ class VerifyTest(unittest.TestCase):
         self.assertEqual(result["category_answer"], "No")
 
     def test_unknown_category_fails(self):
-        result = self.tool.verify("DOC-1", "Cap On Liability", "Yes", [])
+        result = self.tool.verify("DOC-1", "Payment Schedule", "Yes", [])
         self.assertEqual(result["verification_status"], "FAILED")
         self.assertEqual(result["diagnostic_codes"], ["UNSUPPORTED_CATEGORY"])
 
@@ -615,7 +615,7 @@ class ConfigurationTest(unittest.TestCase):
     def test_configuration_reports_units(self):
         config = RAGTool({"semantic": False}).configuration()
         self.assertEqual(config["offset_unit"], "Unicode code points, zero-based [start,end)")
-        self.assertEqual(len(config["categories"]), 11)
+        self.assertEqual(len(config["categories"]), 41)
         self.assertEqual(config["chunking"]["chunk_size"], 800)
         self.assertFalse(config["retrieval_confidence"]["calibrated"])
 
