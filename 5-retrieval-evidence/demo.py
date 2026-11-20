@@ -1,4 +1,4 @@
-"""十一类任务的联调冒烟：RAGTool + 最小 Agent 循环 + MockRuleTool。
+"""CUAD 全部 41 类任务的联调冒烟：RAGTool + 最小 Agent 循环 + MockRuleTool。
 
 这不是 4 号的 Agent 实现，只是用与《工程架构与工具接口_修订版》一致的调用顺序
 （prepare → retrieve → 抽取 → verify → 规则）跑一遍，证明工具接口可用、字段对得上。
@@ -15,43 +15,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from tools.rag_tool import RAGTool  # noqa: E402
-
-CONTRACT = """SERVICE AGREEMENT
-
-1. Parties. This Service Agreement is entered into between Nova Systems Inc. and Orbit Retail LLC.
-
-2. Term and Renewal. The initial term is twelve (12) months and shall automatically renew for
-successive one (1) year periods unless either party gives written notice of non-renewal at least
-ninety (90) days prior to the end of the then-current term.
-
-3. Termination for Convenience. Customer may terminate this Agreement for any reason upon thirty
-(30) days prior written notice.
-
-4. Governing Law. This Agreement shall be governed by the laws of the State of Colorado.
-
-5. Fees. Customer shall pay the fees in Exhibit A within thirty (30) days of invoice.
-
-6. Limitation of Liability. Aggregate liability shall not exceed the fees paid in the prior
-twelve (12) months.
-"""
-
-QUESTIONS = {
-    "Document Name": "What is the name of this agreement?",
-    "Parties": "Who are the contracting parties?",
-    "Agreement Date": "What is the agreement date?",
-    "Effective Date": "When does the agreement become effective?",
-    "Expiration Date": "When does the agreement expire?",
-    "Governing Law": "Which jurisdiction governs the agreement?",
-    "Renewal Term": "What is the renewal term?",
-    "Notice Period To Terminate Renewal": "What advance notice is required to prevent renewal?",
-    "Insurance": "Does the agreement impose insurance obligations?",
-    "Audit Rights": "Does a party have audit or inspection rights?",
-    "Termination For Convenience": "May a party terminate without cause?",
-}
+from tools.rag_tool import RAGTool, TEMPLATE_QUESTIONS  # noqa: E402
 
 PATTERNS = {
     # category: (正则, 固定答案或 None=用捕获组1, 是否 Yes/No 类)
+    "Cap On Liability": (r"Aggregate liability shall not exceed the fees paid in the prior\s+twelve \(12\) months", "Yes", True),
+    "Warranty Duration": (r"warrants the services for (six months) after acceptance", None, False),
     "Governing Law": (r"laws of the State of ([A-Z][a-z]+)", None, False),
     "Renewal Term": (r"successive\s+one\s*\(1\)\s*year", "successive 1 year", False),
     "Notice Period To Terminate Renewal": (r"at least\s+ninety\s*\(90\)\s*days", "90 days", False),
@@ -133,8 +102,11 @@ def main() -> int:
     rules = MockRuleTool()
     print(f"{'category':36s} {'chunks':>6s} {'answer':22s} {'verify':9s} {'coverage':13s} rules")
     print("-" * 110)
-    for index, (category, question) in enumerate(QUESTIONS.items(), start=1):
-        retrieval = tool.retrieve("DEMO-001", question, top_k=5)
+    for index, (category, question) in enumerate(TEMPLATE_QUESTIONS.items(), start=1):
+        retrieval = tool.retrieve("DEMO-001", question, top_k=5, category=category)
+        if retrieval["status"] == "FAILED":
+            print(f"{category} retrieval failed:", retrieval)
+            return 1
         chunks = retrieval["text"]
         extraction = stub_extract(category, chunks)
         history = [{"query": question, "top_k": 5,
