@@ -30,6 +30,7 @@ try:  # 作为 tools/rag_tool.py 被 Agent 导入时
                                     HybridIndex, SentenceTransformerEmbedder)
     from rag_core.index import BM25Index, ChunkConfig, split_by_clause, split_context, split_units
     from rag_core.pdf_ingest import IngestError, ingest
+    from rag_core.retrieval import load_categories
     from rag_core.rerank import CrossEncoderReranker, RerankerError
     from rag_core.semantic_review import build_review_messages, parse_review
     from rag_core.deepseek_client import DeepSeekClient, ModelConfigError
@@ -39,6 +40,7 @@ except ModuleNotFoundError:  # 作为包内相对导入时
                                       HybridIndex, SentenceTransformerEmbedder)
     from ..rag_core.index import BM25Index, ChunkConfig, split_by_clause, split_context, split_units
     from ..rag_core.pdf_ingest import IngestError, ingest
+    from ..rag_core.retrieval import load_categories
     from ..rag_core.rerank import CrossEncoderReranker, RerankerError
     from ..rag_core.semantic_review import build_review_messages, parse_review
     from ..rag_core.deepseek_client import DeepSeekClient, ModelConfigError
@@ -48,42 +50,25 @@ ModelCall = Callable[[list[dict[str, str]]], str | dict]
 __all__ = ["RAGTool", "CATEGORY_NAMES"]
 CACHE_SCHEMA_VERSION = "rag-v1.3-chunking-1"
 
-# 十一类抽取任务
-CATEGORY_NAMES = (
-    "Document Name",
-    "Parties",
-    "Agreement Date",
-    "Effective Date",
-    "Expiration Date",
-    "Governing Law",
-    "Renewal Term",
-    "Notice Period To Terminate Renewal",
-    "Insurance",
-    "Audit Rights",
-    "Termination For Convenience",
-)
-
-_YES_NO_CATEGORIES = {"Insurance", "Audit Rights", "Termination For Convenience"}
-
-# 与 4 号 ContractReviewAgent.CATEGORIES 完全一致的固定问句。Agent 不传 category 时，
-# 只有"问句与模板逐字相同"才做词表扩展；改写过的问句按纯 query 检索，不猜意图。
-TEMPLATE_QUESTIONS = {
-    "Document Name": "What is the name of this agreement?",
-    "Parties": "Who are the contracting parties?",
-    "Agreement Date": "What is the agreement date?",
-    "Effective Date": "When does the agreement become effective?",
-    "Expiration Date": "When does the agreement expire?",
-    "Governing Law": "Which jurisdiction governs the agreement?",
-    "Renewal Term": "What is the renewal term?",
-    "Notice Period To Terminate Renewal": "What advance notice is required to prevent renewal?",
-    "Insurance": "Does the agreement impose insurance obligations?",
-    "Audit Rights": "Does a party have audit or inspection rights?",
-    "Termination For Convenience": "May a party terminate without cause?",
-}
-
-
 def _normalize_question(text: str) -> str:
     return " ".join("".join(ch.lower() if ch.isalnum() else " " for ch in text).split())
+
+
+# The registry drives both explicit category calls and exact template matches.
+# Keep the original 11 names and questions first for existing callers.
+_CATEGORY_ENTRIES = load_categories()["categories"]
+CATEGORY_NAMES = tuple(item["cuad_name"] for item in _CATEGORY_ENTRIES)
+TEMPLATE_QUESTIONS = {item["cuad_name"]: item["question"] for item in _CATEGORY_ENTRIES}
+_YES_NO_CATEGORIES = {item["cuad_name"] for item in _CATEGORY_ENTRIES
+                      if item["answer_type"] == "yes_no"}
+_TEMPLATE_LOOKUP = {_normalize_question(question): name
+                    for name, question in TEMPLATE_QUESTIONS.items()}
+_CATEGORY_ALIASES = {_normalize_question(alias): item["cuad_name"]
+                     for item in _CATEGORY_ENTRIES
+                     for alias in (item["cuad_name"], *item["aliases"])}
+_CATEGORY_QUERIES = {item["cuad_name"]: {"lexical": item["query"], "semantic": item["semantic_query"]}
+                     for item in _CATEGORY_ENTRIES}
+
 
 DEFAULT_CONFIG = {
     "chunk_size": 800,
@@ -160,9 +145,6 @@ class RAGTool:
         #   _contexts : document_id -> 冻结的完整合同文本（含哈希、页码映射）
         self._indexes: dict[str, dict[str, Any]] = {}
         self._contexts: dict[str, dict[str, Any]] = {}
-        self._category_registry: dict[str, dict[str, str]] | None = None
-        self._category_aliases: dict[str, str] | None = None
-        self._template_lookup: dict[str, str] | None = None
         self._model_error: str | None = None
         self.model_call: ModelCall | None = merged.get("model_call")
         if self.model_call is None and merged.get("semantic", True):
@@ -471,7 +453,7 @@ class RAGTool:
         if entry is None:
             return self._fail(base, "DOCUMENT_NOT_PREPARED", "合同尚未 prepare 或已被缓存淘汰")
         if resolved_category is None:
-            return self._fail(base, "UNSUPPORTED_CATEGORY", "不在十一类任务内")
+            return self._fail(base, "UNSUPPORTED_CATEGORY", "类别不在当前支持的 CUAD 类目中")
         category = resolved_category
         if not isinstance(predicted_answers, list):
             return self._fail(base, "INVALID_INPUT", "predicted_answers 必须是列表")
@@ -605,40 +587,16 @@ class RAGTool:
         return self._page_of(entry, start) if entry else None
 
     def _match_template_question(self, query: str) -> str | None:
-        if self._template_lookup is None:
-            self._template_lookup = {_normalize_question(q): c for c, q in TEMPLATE_QUESTIONS.items()}
-        return self._template_lookup.get(_normalize_question(query))
-
-    def _load_category_registry(self) -> None:
-        if self._category_registry is None:
-            import json
-            path = Path(__file__).resolve().parent.parent / "rag_core" / "categories.json"
-            try:
-                registry = json.loads(path.read_text(encoding="utf-8"))
-                self._category_registry = {}
-                self._category_aliases = {}
-                for item in registry.get("categories", []):
-                    canonical = item["cuad_name"]
-                    self._category_registry[canonical] = {
-                        "lexical": item.get("query", ""),
-                        "semantic": item.get("semantic_query", ""),
-                    }
-                    for name in (canonical, *item.get("aliases", [])):
-                        self._category_aliases[_normalize_question(name)] = canonical
-            except (OSError, ValueError, KeyError):
-                self._category_registry = {}
-                self._category_aliases = {}
+        return _TEMPLATE_LOOKUP.get(_normalize_question(query))
 
     def _resolve_category(self, category: Any) -> str | None:
         if not isinstance(category, str) or not category.strip():
             return None
-        self._load_category_registry()
-        return (self._category_aliases or {}).get(_normalize_question(category))
+        return _CATEGORY_ALIASES.get(_normalize_question(category))
 
     def _category_queries(self, category: str) -> dict[str, str]:
-        self._load_category_registry()
         canonical = self._resolve_category(category) or category
-        return (self._category_registry or {}).get(canonical, {})
+        return _CATEGORY_QUERIES.get(canonical, {})
 
     def _category_vocabulary(self, category: str) -> str:
         """Compatibility helper retained for the evaluation script and old tests."""
