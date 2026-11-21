@@ -96,12 +96,29 @@ class EvaluationAccountingTest(unittest.TestCase):
             with patch("evaluation.evaluate_rag_tool.RAGTool", StubRAGTool):
                 summary = evaluate(0, 5, 0.8, "as-agent", retrieval_mode="bm25",
                                    cuad_path=path)
-        row = summary["categories"][0]
+        row = next(r for r in summary["categories"] if r["category"] == "Renewal Term")
+        unlabeled = next(r for r in summary["categories"] if r["category"] == "Parties")
+        self.assertIsNone(unlabeled["recall@5"])
+        self.assertEqual(summary["categories_with_positive_spans"], 1)
+        self.assertEqual(summary["macro"]["recall@5"], 1.0)
         self.assertEqual(row["contract@1"], 0.0)
         self.assertEqual(row["contract@5"], 1.0)
         self.assertNotIn("recall@10", row)
         self.assertEqual(summary["config"]["reported_k"], [1, 3, 5])
         self.assertEqual(summary["dataset"]["split"], "test")
+
+    def test_all_negative_category_has_no_recall_denominator(self):
+        payload = {"data": [{"title": "D", "paragraphs": [{"context": "Terms",
+                   "qas": [{"id": "D__Renewal Term", "answers": []}]}]}]}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "test.json"
+            path.write_text(json.dumps(payload))
+            result = evaluate(0, 5, 0.8, "as-agent", retrieval_mode="bm25",
+                              categories=["Renewal Term"], cuad_path=path)
+        self.assertEqual(result["categories"][0]["contracts_with_question"], 1)
+        self.assertEqual(result["positive_contract_category_pairs"], 0)
+        self.assertIsNone(result["micro"]["recall@5"])
+        self.assertIsNone(result["macro"]["recall@5"])
 
     def test_train_separate_question_suffix_is_recognised(self):
         context = "successive one year renewals"

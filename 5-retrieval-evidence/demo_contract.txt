@@ -15,3 +15,5 @@ ninety (90) days prior to the end of the then-current term.
 
 6. Limitation of Liability. Aggregate liability shall not exceed the fees paid in the prior
 twelve (12) months.
+
+7. Warranty. Supplier warrants the services for six months after acceptance.

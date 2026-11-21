@@ -28,7 +28,7 @@ def main(argv=None):
     parser.add_argument("--embedding-model", default=DEFAULT_EMBEDDING_MODEL)
     parser.add_argument("--embedding-revision", default=DEFAULT_EMBEDDING_REVISION)
     parser.add_argument("--out", type=Path,
-                        default=ROOT / "results/hybrid_threshold_train.json")
+                        default=ROOT / "results/cuad41_hybrid_threshold_train.json")
     args = parser.parse_args(argv)
     if not args.train.is_file():
         parser.error(f"train split not found: {args.train}")

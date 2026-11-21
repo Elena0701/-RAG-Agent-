@@ -25,7 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from tools.rag_tool import RAGTool  # noqa: E402
+from tools.rag_tool import RAGTool, TEMPLATE_QUESTIONS as QUESTIONS  # noqa: E402
 from rag_core.index import covered_chars  # noqa: E402
 
 DEFAULT_CUAD = ROOT.parent / "data" / "cuad" / "source" / "test.json"
@@ -34,34 +34,20 @@ DEFAULT_EMBEDDING_REVISION = "b207367332321f8e44f96e224ef15bc607f4dbf0"
 DEFAULT_RERANKER_REVISION = "233902d25c440f23af6f7d6e94d2946bac0bee0a"
 QUERY_MODES = ("as-agent", "with-category", "question-only", "vocab-only", "reworded")
 
-QUESTIONS = {
-    "Document Name": "What is the name of this agreement?",
-    "Parties": "Who are the contracting parties?",
-    "Agreement Date": "What is the agreement date?",
-    "Effective Date": "When does the agreement become effective?",
-    "Expiration Date": "When does the agreement expire?",
-    "Governing Law": "Which jurisdiction governs the agreement?",
-    "Renewal Term": "What is the renewal term?",
-    "Notice Period To Terminate Renewal": "What advance notice is required to prevent renewal?",
-    "Insurance": "Does the agreement impose insurance obligations?",
-    "Audit Rights": "Does a party have audit or inspection rights?",
-    "Termination For Convenience": "May a party terminate without cause?",
-}
+
+def qa_category(qa):
+    """Train stores separate answers as __Category_0; test uses __Category."""
+    return re.sub(r"_\d+$", "", str(qa.get("id", "")).rsplit("__", 1)[-1])
 
 
 def gold_spans(qas, category, context):
     spans, seen = [], set()
     for qa in qas:
-        # test/CUADv1 use ``__Category``; train_separate_questions stores
-        # one answer per QA as ``__Category_0``, ``__Category_1``, ...
-        qa_category = str(qa.get("id", "")).rsplit("__", 1)[-1]
-        if qa_category != category and not re.fullmatch(
-            re.escape(category) + r"_\d+", qa_category
-        ):
+        if qa_category(qa) != category:
             continue
         for answer in qa.get("answers", []):
             text, start = answer.get("text") or "", answer.get("answer_start")
-            if not isinstance(start, int) or not text:
+            if type(start) is not int or start < 0 or not text:
                 continue
             if context[start:start + len(text)] != text or (start, text) in seen:
                 continue
@@ -86,10 +72,11 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
              reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
              reranker_revision: str | None = DEFAULT_RERANKER_REVISION,
              ranking_policy: str = "structured_protected",
-             cuad_path: Path = DEFAULT_CUAD):
+             cuad_path: Path = DEFAULT_CUAD, categories=None):
     """mode: as-agent / with-category / reworded"""
     if top_k <= 0:
         raise ValueError("top_k must be positive")
+    questions = QUESTIONS if categories is None else {c: QUESTIONS[c] for c in categories}
     raw_bytes = cuad_path.read_bytes()
     raw = json.loads(raw_bytes.decode("utf-8"))
     documents = raw["data"][:limit] if limit else raw["data"]
@@ -120,28 +107,38 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
                                  "contract_hit": {k: 0 for k in active_ks}})
     started = time.time()
     failures = []
+    retrieve_failures = []
+    observed = defaultdict(int)
     for doc in documents:
         title = doc["title"]
         context = doc["paragraphs"][0]["context"]
         qas = doc["paragraphs"][0].get("qas", [])
+        document_categories = {qa_category(qa) for qa in qas}
+        unknown = document_categories.difference(QUESTIONS)
+        if unknown and categories is None:
+            raise ValueError(f"Unknown CUAD question IDs for {title}: {sorted(unknown)}")
+        for category in questions.keys() & document_categories:
+            observed[category] += 1
+        positive = {c: spans for c in questions.keys() & document_categories
+                    if (spans := gold_spans(qas, c, context))}
+        if not positive:
+            continue
         prepared = tool.prepare_text(title, context)
         if prepared["status"] != "SUCCESS":
             failures.append({"document": title, "reason": prepared["reason"]})
         # 冻结文本可能因归一化变化，gold 偏移以冻结文本为准重新校验
         frozen = tool.context(title) or context
-        for category, question in QUESTIONS.items():
-            spans = gold_spans(qas, category, context)
+        for category, question in questions.items():
+            spans = positive.get(category)
             if not spans:
                 continue
             frozen_spans = []
             for start, end, text in spans:
                 if frozen[start:start + len(text)] == text:
                     frozen_spans.append((start, end, text))
-            if not frozen_spans:
-                continue
             entry = stats[category]
             entry["contracts"] += 1
-            entry["spans"] += len(frozen_spans)
+            entry["spans"] += len(spans)
             if mode == "with-category":
                 result = tool.retrieve(title, question, top_k=top_k, category=category)
             elif mode == "question-only":
@@ -152,6 +149,9 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
                 result = tool.retrieve(title, question + " Please cite the relevant clause.", top_k=top_k)
             else:
                 result = tool.retrieve(title, question, top_k=top_k)
+            if result.get("status") == "FAILED" and prepared["status"] == "SUCCESS":
+                retrieve_failures.append({"document": title, "category": category,
+                                          "reason": result.get("reason", "unknown")})
             chunks = result["text"]
             contract_hits = {k: False for k in active_ks}
             for k in active_ks:
@@ -168,14 +168,17 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
     elapsed = time.time() - started
 
     rows = []
-    for category, entry in sorted(stats.items()):
+    for category in sorted(questions):
+        entry = stats[category]
         n = entry["spans"]
         row = {
             "category": category,
             "contracts": entry["contracts"],
+            "contracts_with_question": observed[category],
             "gold_spans": n,
         }
         for k in active_ks:
+            row[f"hits@{k}"] = entry["hit"][k]
             row[f"recall@{k}"] = round(entry["hit"][k] / n, 4) if n else None
             row[f"exact@{k}"] = round(entry["exact"][k] / n, 4) if n else None
             row[f"contract@{k}"] = (
@@ -184,9 +187,9 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
             )
         rows.append(row)
     total_spans = sum(r["gold_spans"] for r in rows)
-    if not rows or not total_spans:
+    if not any(observed.values()):
         raise ValueError(
-            "No gold spans were recognised for the 11 configured categories; "
+            "No CUAD question IDs matched the configured categories; "
             "check the CUAD split schema and category IDs."
         )
     micro, macro = {}, {}
@@ -194,11 +197,12 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
         for metric in ("recall", "exact"):
             key = f"{metric}@{k}"
             counter = 'hit' if metric == 'recall' else 'exact'
-            micro[key] = round(sum(entry[counter][k] for entry in stats.values()) / total_spans, 4)
-            macro[key] = (round(sum(r[key] for r in rows) / len(rows), 4)
-                          if rows else None)
+            micro[key] = (round(sum(entry[counter][k] for entry in stats.values()) / total_spans, 4)
+                          if total_spans else None)
+            rates = [entry[counter][k] / entry["spans"] for entry in stats.values() if entry["spans"]]
+            macro[key] = round(sum(rates) / len(rates), 4) if rates else None
     summary = {
-        "dataset": {"path": str(cuad_path), "file": cuad_path.name,
+        "dataset": {"file": cuad_path.name,
                     "sha256": hashlib.sha256(raw_bytes).hexdigest(),
                     "split": cuad_path.stem, "documents_evaluated": len(documents)},
         "config": {"chunk_size": 800, "chunk_overlap": 120, "top_k": top_k,
@@ -221,7 +225,14 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
                    "reranker_revision": reranker_revision if reranker_enabled else None,
                    "reported_k": list(active_ks), "primary_k": primary_k},
         "contracts": len(documents),
-        "prepare_failures": failures,
+        "category_count": len(questions),
+        "category_registry_sha256": hashlib.sha256(
+            (ROOT / "rag_core" / "categories.json").read_bytes()
+        ).hexdigest(),
+        "categories_with_positive_spans": sum(row["gold_spans"] > 0 for row in rows),
+        "positive_contract_category_pairs": sum(row["contracts"] for row in rows),
+        "macro_denominator": "categories with at least one valid gold span",
+        "prepare_failures": failures, "retrieve_failures": retrieve_failures,
         "exact_definition": "gold occurrence fully contained in one returned chunk at its annotated position",
         "gold_spans": total_spans,
         "micro": micro, "macro": macro,
@@ -229,6 +240,10 @@ def evaluate(limit: int, top_k: int, threshold: float, mode: str, strategy: str 
         "categories": rows,
     }
     return summary
+
+
+def format_rate(value):
+    return "N/A" if value is None else f"{value:.3f}"
 
 
 def main(argv=None):
@@ -263,7 +278,9 @@ def main(argv=None):
                         help="只评测指定问法；默认运行全部五种问法")
     parser.add_argument("--cuad", type=Path, default=DEFAULT_CUAD,
                         help="CUAD JSON 路径；默认读取独立 test.json")
-    parser.add_argument("--out", type=Path, default=ROOT / "results/rag_tool_eval.json")
+    parser.add_argument("--category", action="append", choices=list(QUESTIONS),
+                        help="仅评测指定类别，可重复指定，默认评测全部类别")
+    parser.add_argument("--out", type=Path, default=ROOT / "results/cuad41_eval.json")
     args = parser.parse_args(argv)
     if not args.cuad.is_file():
         parser.error(f"找不到 CUAD 数据文件：{args.cuad}；请用 --cuad 指定 JSON 拆分")
@@ -286,15 +303,15 @@ def main(argv=None):
             reranker_enabled=args.reranker_enabled,
             reranker_model=args.reranker_model,
             reranker_revision=args.reranker_revision,
-            cuad_path=args.cuad,
+            cuad_path=args.cuad, categories=args.category,
         )
         label = summary["config"]["query_mode"]
         results[label] = summary
         primary_k = summary["config"]["primary_k"]
-        print(f"{label:16s} span R@1={summary['micro']['recall@1']:.3f} "
-              f"R@{primary_k}={summary['micro'][f'recall@{primary_k}']:.3f} "
-              f"exact@{primary_k}={summary['micro'][f'exact@{primary_k}']:.3f} "
-              f"macro R@{primary_k}={summary['macro'][f'recall@{primary_k}']:.3f} "
+        print(f"{label:16s} span R@1={format_rate(summary['micro']['recall@1'])} "
+              f"R@{primary_k}={format_rate(summary['micro'][f'recall@{primary_k}'])} "
+              f"exact@{primary_k}={format_rate(summary['micro'][f'exact@{primary_k}'])} "
+              f"macro R@{primary_k}={format_rate(summary['macro'][f'recall@{primary_k}'])} "
               f"({summary['elapsed_seconds']}s)")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -304,8 +321,8 @@ def main(argv=None):
     print(f"\n{'category':38s} {'spans':>6s} {'R@1':>6s} "
           f"{'R@' + str(primary_k):>6s} {'exact@' + str(primary_k):>8s}")
     for row in best["categories"]:
-        print(f"{row['category']:38s} {row['gold_spans']:6d} {row['recall@1']:6.3f} "
-              f"{row[f'recall@{primary_k}']:6.3f} {row[f'exact@{primary_k}']:8.3f}")
+        print(f"{row['category']:38s} {row['gold_spans']:6d} {format_rate(row['recall@1']):>6s} "
+              f"{format_rate(row[f'recall@{primary_k}']):>6s} {format_rate(row[f'exact@{primary_k}']):>8s}")
     print(f"\nwritten to {args.out}")
     return 0
 

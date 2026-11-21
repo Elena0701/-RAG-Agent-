@@ -1,6 +1,6 @@
-# RAGTool 接口说明（v1.4 Hybrid RAG）
+# RAGTool 接口说明（CUAD 全 41 类）
 
-日期：2026-11-05　入口：`tools/rag_tool.py`　自动测试：71 项（70 快速 + 1 真实模型可选）
+入口 `tools/rag_tool.py`。完整任务表可通过 `from tools.rag_tool import TEMPLATE_QUESTIONS` 导入，键为 CUAD 英文类别，值为默认核查问句。
 
 ## 1. 接口不变
 
@@ -189,7 +189,7 @@ v1.4：即使覆盖为 SUFFICIENT，空引用 No 也返回 UNCERTAIN/NO_EVIDENCE
 ## 8. 联调验收
 
 1. `prepare` 返回 `retrieval_mode="embedding"`；
-2. 11 类调用均能返回带 `start/end/page/score` 的候选块；
+2. 41 类调用均能返回带 `start/end/page/score` 的候选块；
 3. 故意改错 `answer_start`，必须得到 `POSITION_MISMATCH`；
 4. `No` 且存在未覆盖主题词时，必须得到 `coverage_status="INSUFFICIENT"`；
 5. 日志可按 `document_id + category` 重放 query、top-k 和 chunk IDs；

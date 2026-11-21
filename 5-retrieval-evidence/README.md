@@ -1,4 +1,4 @@
-# RAGTool 交付说明（第 5 号，v1.4 Hybrid RAG）
+# RAGTool 交付说明（第 5 号，CUAD 全部 41 类）
 
 本模块是合同审查 Agent 调用的检索与证据核验工具。对外接口仍是
 `prepare / retrieve / verify`，因此 4 号 Agent 不需要因本次改造改变工作流。
@@ -35,15 +35,19 @@ rag_core/pdf_ingest.py            # 合同解析、冻结文本、页码
 rag_core/coverage.py              # No 答案的覆盖充分性检查
 rag_core/semantic_review.py       # 证据语义核验提示词与结果校验
 rag_core/deepseek_client.py       # DeepSeek 核验客户端
-rag_core/categories.json          # 11 类 CUAD 类别与检索词
+rag_core/categories.json          # 41 类 CUAD 检索配置
 evaluation/evaluate_rag_tool.py   # CUAD Recall@K 评测
 evaluation/diagnose_ranking.py    # 候选诊断、固定开发集选方案、历史测试回放
 evaluation/select_hybrid_threshold.py # 仅用训练集选参
 evaluation/benchmark_cache.py     # 冷/热向量缓存耗时
-tests/                            # 71 项测试（70 快速 + 1 真实模型可选）
+tests/                            # 检索、核验、评测口径及可选真实模型测试
 ```
 
 ## 2. 安装
+
+完整英文类别和默认核查问句见 `tools.rag_tool.TEMPLATE_QUESTIONS`。每份合同 prepare 一次，可按需检索一个类别，也可遍历全部 41 类。
+
+类别名与本地 CUAD v1 的 QA 标签一致。依据[项目官方类别说明](https://github.com/TheAtticusProject/cuad/blob/main/category_descriptions.csv)，质保期限提取时长，责任上限提取有无该条款，金额或计算方式保留在证据中。本模块按判断题处理向被许可方关联企业授予许可的情形（Affiliate License-Licensee）。
 
 ```bash
 cd 5-retrieval-evidence
@@ -102,7 +106,7 @@ verification = rag.verify(
 | `retrieve` | `text[].text/start/end/score/page`, `retrieval_mode` | 可追溯候选证据；原字段保持不变 |
 | `verify` | `evidence_checks`, `verification_status`, `coverage_status` | 供 3、4 号继续规则判断与补查 |
 
-`retrieve` 的 `category` 是可选参数，但推荐 4 号显式传入，以便固定检索意图。别名会归一到 11 个正式类别，未知类别返回 `UNSUPPORTED_CATEGORY`。所有
+`retrieve` 的 `category` 是可选参数，建议显式传入。别名会归一到 41 个正式类别，未知类别返回 `UNSUPPORTED_CATEGORY`。所有
 `answer_start` 都相对 `prepare` 冻结后的全文，必须满足：
 
 ```python
@@ -130,14 +134,14 @@ dense_only = RAGTool({"retrieval_mode": "embedding", "hybrid_enabled": False})
 baseline = RAGTool({"retrieval_mode": "bm25"})
 ```
 
-三种模式的 Agent 接口和原有证据字段一致。v1.4 修正了同位置不同长度标注的去重、重复文字误算精确命中以及失败样本分母统计。下面各行都用新口径重算；102 份官方 test 合同包含 1307 个去重有效标注。
+全 41 类结果见 [评测说明](results/README.md)。下表记录 v1.4 原 11 类的历史回放，分母为 102 份官方 test 合同中的 1307 个去重有效标注。
 
 | 历史测试回放方法 | Recall@5 | 位置精确命中@5 | Macro Recall@5 |
 | --- | ---: | ---: | ---: |
 | 纯 Embedding（原始问句） | 0.4682 | 0.4598 | 0.5545 |
 | BM25 基线 | 0.7177 | 0.7008 | 0.7488 |
 | 旧保护式混合，按新口径重算 | 0.7238 | 0.7070 | 0.7502 |
-| 当前结构补充混合 | **0.7980** | **0.7812** | **0.8135** |
+| v1.4 结构补充混合 | **0.7980** | **0.7812** | **0.8135** |
 
 结果见 `results/v14_development.json` 和 `results/v14_test_replay.json`。不得直接与 v1.3 旧口径 Exact@5 比较。`retrieval_confidence` 是未校准的补查启发式，不是概率。`score` 保留 RRF 数值，结构优先会使最终排序不严格按 score 递减；使用 `rank` 和列表顺序。
 
@@ -167,7 +171,7 @@ RUN_MODEL_TESTS=1 HF_HUB_OFFLINE=1 .venv/bin/python -m unittest tests.test_model
 HF_HUB_OFFLINE=1 .venv/bin/python evaluation/select_hybrid_threshold.py
 HF_HUB_OFFLINE=1 .venv/bin/python evaluation/benchmark_cache.py
 
-# v1.4 方案选择与固定方案回放
+# 可选：在当前类别范围内重新选参并回放
 HF_HUB_OFFLINE=1 .venv/bin/python evaluation/diagnose_ranking.py
 HF_HUB_OFFLINE=1 .venv/bin/python evaluation/diagnose_ranking.py --split test_replay
 
@@ -175,7 +179,7 @@ HF_HUB_OFFLINE=1 .venv/bin/python evaluation/diagnose_ranking.py --split test_re
 HF_HUB_OFFLINE=1 .venv/bin/python evaluation/evaluate_rag_tool.py \
   --retrieval-mode embedding --modes as-agent \
   --cuad ../data/cuad/source/test.json \
-  --out results/hybrid_test.json
+  --out results/replication_41_hybrid.json
 
 # 纯 Embedding 消融：额外加 --dense-only
 
@@ -183,7 +187,7 @@ HF_HUB_OFFLINE=1 .venv/bin/python evaluation/evaluate_rag_tool.py \
 .venv/bin/python evaluation/evaluate_rag_tool.py \
   --retrieval-mode bm25 --modes as-agent \
   --cuad ../data/cuad/source/test.json \
-  --out results/bm25_test.json
+  --out results/replication_41_bm25.json
 ```
 
 `HF_HUB_OFFLINE=1` 只适用于模型已经下载到本机之后，可避免离线环境反复检查网络。
