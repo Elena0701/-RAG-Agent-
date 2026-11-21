@@ -1,0 +1,397 @@
+{
+  "categories": [
+    {
+      "cuad_index": 6,
+      "category": "Renewal Term",
+      "label": "续约期限",
+      "answer_type": "DURATION",
+      "fact_templates": {
+        "value": "识别到续约期限答案为：{value}。",
+        "unknown": "暂无法确认续约期限。"
+      }
+    },
+    {
+      "cuad_index": 7,
+      "category": "Notice Period To Terminate Renewal",
+      "label": "退出续约通知期限",
+      "answer_type": "DURATION",
+      "fact_templates": {
+        "value": "识别到退出续约通知期限答案为：{value}。",
+        "unknown": "暂无法确认退出续约通知期限。"
+      }
+    },
+    {
+      "cuad_index": 8,
+      "category": "Governing Law",
+      "label": "适用法律",
+      "answer_type": "JURISDICTION",
+      "fact_templates": {
+        "value": "识别到适用法律答案为：{value}。",
+        "unknown": "暂无法确认适用法律。"
+      }
+    },
+    {
+      "cuad_index": 9,
+      "category": "Most Favored Nation",
+      "label": "最惠待遇",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在最惠待遇条款。",
+        "absent": "经本次充分检查，未发现最惠待遇条款。",
+        "unknown": "暂无法确认是否存在最惠待遇条款。"
+      }
+    },
+    {
+      "cuad_index": 10,
+      "category": "Competitive Restriction Exception",
+      "label": "竞争限制例外",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在竞争限制例外条款。",
+        "absent": "经本次充分检查，未发现竞争限制例外条款。",
+        "unknown": "暂无法确认是否存在竞争限制例外条款。"
+      }
+    },
+    {
+      "cuad_index": 11,
+      "category": "Non-Compete",
+      "label": "竞业限制",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在竞业限制条款。",
+        "absent": "经本次充分检查，未发现竞业限制条款。",
+        "unknown": "暂无法确认是否存在竞业限制条款。"
+      }
+    },
+    {
+      "cuad_index": 12,
+      "category": "Exclusivity",
+      "label": "排他性安排",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在排他性安排条款。",
+        "absent": "经本次充分检查，未发现排他性安排条款。",
+        "unknown": "暂无法确认是否存在排他性安排条款。"
+      }
+    },
+    {
+      "cuad_index": 13,
+      "category": "No-Solicit Of Customers",
+      "label": "禁止招揽客户",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在禁止招揽客户条款。",
+        "absent": "经本次充分检查，未发现禁止招揽客户条款。",
+        "unknown": "暂无法确认是否存在禁止招揽客户条款。"
+      }
+    },
+    {
+      "cuad_index": 14,
+      "category": "No-Solicit Of Employees",
+      "label": "禁止招揽员工",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在禁止招揽员工条款。",
+        "absent": "经本次充分检查，未发现禁止招揽员工条款。",
+        "unknown": "暂无法确认是否存在禁止招揽员工条款。"
+      }
+    },
+    {
+      "cuad_index": 15,
+      "category": "Non-Disparagement",
+      "label": "禁止贬损",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在禁止贬损条款。",
+        "absent": "经本次充分检查，未发现禁止贬损条款。",
+        "unknown": "暂无法确认是否存在禁止贬损条款。"
+      }
+    },
+    {
+      "cuad_index": 16,
+      "category": "Termination For Convenience",
+      "label": "无因终止",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在无因终止条款。",
+        "absent": "经本次充分检查，未发现无因终止条款。",
+        "unknown": "暂无法确认是否存在无因终止条款。"
+      }
+    },
+    {
+      "cuad_index": 17,
+      "category": "Rofr/Rofo/Rofn",
+      "label": "优先购买／要约／谈判权",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在优先购买／要约／谈判权条款。",
+        "absent": "经本次充分检查，未发现优先购买／要约／谈判权条款。",
+        "unknown": "暂无法确认是否存在优先购买／要约／谈判权条款。"
+      }
+    },
+    {
+      "cuad_index": 18,
+      "category": "Change Of Control",
+      "label": "控制权变更安排",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在控制权变更安排条款。",
+        "absent": "经本次充分检查，未发现控制权变更安排条款。",
+        "unknown": "暂无法确认是否存在控制权变更安排条款。"
+      }
+    },
+    {
+      "cuad_index": 19,
+      "category": "Anti-Assignment",
+      "label": "转让限制",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在转让限制条款。",
+        "absent": "经本次充分检查，未发现转让限制条款。",
+        "unknown": "暂无法确认是否存在转让限制条款。"
+      }
+    },
+    {
+      "cuad_index": 20,
+      "category": "Revenue/Profit Sharing",
+      "label": "收入／利润分成",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在收入／利润分成条款。",
+        "absent": "经本次充分检查，未发现收入／利润分成条款。",
+        "unknown": "暂无法确认是否存在收入／利润分成条款。"
+      }
+    },
+    {
+      "cuad_index": 21,
+      "category": "Price Restrictions",
+      "label": "价格限制",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在价格限制条款。",
+        "absent": "经本次充分检查，未发现价格限制条款。",
+        "unknown": "暂无法确认是否存在价格限制条款。"
+      }
+    },
+    {
+      "cuad_index": 22,
+      "category": "Minimum Commitment",
+      "label": "最低采购／交易承诺",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在最低采购／交易承诺条款。",
+        "absent": "经本次充分检查，未发现最低采购／交易承诺条款。",
+        "unknown": "暂无法确认是否存在最低采购／交易承诺条款。"
+      }
+    },
+    {
+      "cuad_index": 23,
+      "category": "Volume Restriction",
+      "label": "使用量／数量限制",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在使用量／数量限制条款。",
+        "absent": "经本次充分检查，未发现使用量／数量限制条款。",
+        "unknown": "暂无法确认是否存在使用量／数量限制条款。"
+      }
+    },
+    {
+      "cuad_index": 24,
+      "category": "Ip Ownership Assignment",
+      "label": "知识产权归属转移",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在知识产权归属转移条款。",
+        "absent": "经本次充分检查，未发现知识产权归属转移条款。",
+        "unknown": "暂无法确认是否存在知识产权归属转移条款。"
+      }
+    },
+    {
+      "cuad_index": 25,
+      "category": "Joint Ip Ownership",
+      "label": "知识产权共同所有",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在知识产权共同所有条款。",
+        "absent": "经本次充分检查，未发现知识产权共同所有条款。",
+        "unknown": "暂无法确认是否存在知识产权共同所有条款。"
+      }
+    },
+    {
+      "cuad_index": 26,
+      "category": "License Grant",
+      "label": "许可授予",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在许可授予条款。",
+        "absent": "经本次充分检查，未发现许可授予条款。",
+        "unknown": "暂无法确认是否存在许可授予条款。"
+      }
+    },
+    {
+      "cuad_index": 27,
+      "category": "Non-Transferable License",
+      "label": "许可不可转让",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在许可不可转让条款。",
+        "absent": "经本次充分检查，未发现许可不可转让条款。",
+        "unknown": "暂无法确认是否存在许可不可转让条款。"
+      }
+    },
+    {
+      "cuad_index": 28,
+      "category": "Affiliate License-Licensor",
+      "label": "许可方关联企业相关许可",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在许可方关联企业相关许可条款。",
+        "absent": "经本次充分检查，未发现许可方关联企业相关许可条款。",
+        "unknown": "暂无法确认是否存在许可方关联企业相关许可条款。"
+      }
+    },
+    {
+      "cuad_index": 29,
+      "category": "Affiliate License-Licensee",
+      "label": "被许可方关联企业相关许可",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在被许可方关联企业相关许可条款。",
+        "absent": "经本次充分检查，未发现被许可方关联企业相关许可条款。",
+        "unknown": "暂无法确认是否存在被许可方关联企业相关许可条款。"
+      }
+    },
+    {
+      "cuad_index": 30,
+      "category": "Unlimited/All-You-Can-Eat-License",
+      "label": "无限使用许可",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在无限使用许可条款。",
+        "absent": "经本次充分检查，未发现无限使用许可条款。",
+        "unknown": "暂无法确认是否存在无限使用许可条款。"
+      }
+    },
+    {
+      "cuad_index": 31,
+      "category": "Irrevocable Or Perpetual License",
+      "label": "不可撤销／永久许可",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在不可撤销／永久许可条款。",
+        "absent": "经本次充分检查，未发现不可撤销／永久许可条款。",
+        "unknown": "暂无法确认是否存在不可撤销／永久许可条款。"
+      }
+    },
+    {
+      "cuad_index": 32,
+      "category": "Source Code Escrow",
+      "label": "源代码托管",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在源代码托管条款。",
+        "absent": "经本次充分检查，未发现源代码托管条款。",
+        "unknown": "暂无法确认是否存在源代码托管条款。"
+      }
+    },
+    {
+      "cuad_index": 33,
+      "category": "Post-Termination Services",
+      "label": "终止后义务",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在终止后义务条款。",
+        "absent": "经本次充分检查，未发现终止后义务条款。",
+        "unknown": "暂无法确认是否存在终止后义务条款。"
+      }
+    },
+    {
+      "cuad_index": 34,
+      "category": "Audit Rights",
+      "label": "审计权",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在审计权条款。",
+        "absent": "经本次充分检查，未发现审计权条款。",
+        "unknown": "暂无法确认是否存在审计权条款。"
+      }
+    },
+    {
+      "cuad_index": 35,
+      "category": "Uncapped Liability",
+      "label": "无上限责任",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在无上限责任条款。",
+        "absent": "经本次充分检查，未发现无上限责任条款。",
+        "unknown": "暂无法确认是否存在无上限责任条款。"
+      }
+    },
+    {
+      "cuad_index": 36,
+      "category": "Cap On Liability",
+      "label": "责任限制",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在责任限制条款。",
+        "absent": "经本次充分检查，未发现责任限制条款。",
+        "unknown": "暂无法确认是否存在责任限制条款。"
+      }
+    },
+    {
+      "cuad_index": 37,
+      "category": "Liquidated Damages",
+      "label": "约定损害赔偿／终止费用",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在约定损害赔偿／终止费用条款。",
+        "absent": "经本次充分检查，未发现约定损害赔偿／终止费用条款。",
+        "unknown": "暂无法确认是否存在约定损害赔偿／终止费用条款。"
+      }
+    },
+    {
+      "cuad_index": 38,
+      "category": "Warranty Duration",
+      "label": "保修期限相关条款",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在保修期限相关条款条款。",
+        "absent": "经本次充分检查，未发现保修期限相关条款条款。",
+        "unknown": "暂无法确认是否存在保修期限相关条款条款。"
+      }
+    },
+    {
+      "cuad_index": 39,
+      "category": "Insurance",
+      "label": "保险义务",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在保险义务条款。",
+        "absent": "经本次充分检查，未发现保险义务条款。",
+        "unknown": "暂无法确认是否存在保险义务条款。"
+      }
+    },
+    {
+      "cuad_index": 40,
+      "category": "Covenant Not To Sue",
+      "label": "不起诉承诺",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在不起诉承诺条款。",
+        "absent": "经本次充分检查，未发现不起诉承诺条款。",
+        "unknown": "暂无法确认是否存在不起诉承诺条款。"
+      }
+    },
+    {
+      "cuad_index": 41,
+      "category": "Third Party Beneficiary",
+      "label": "第三方受益人",
+      "answer_type": "BOOLEAN",
+      "fact_templates": {
+        "present": "存在第三方受益人条款。",
+        "absent": "经本次充分检查，未发现第三方受益人条款。",
+        "unknown": "暂无法确认是否存在第三方受益人条款。"
+      }
+    }
+  ]
+}

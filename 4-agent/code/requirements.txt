@@ -1,0 +1,4 @@
+openai>=3.28,<4
+python-dotenv>=1.2,<2
+PyYAML>=6,<7
+-r tools/rag_tool/requirements.txt

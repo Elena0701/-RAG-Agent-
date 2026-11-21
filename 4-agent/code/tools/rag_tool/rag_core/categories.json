@@ -1,0 +1,418 @@
+{
+  "version": "cuad-v1-all-41",
+  "categories": [
+    {
+      "id": "document_name",
+      "label": "合同名称",
+      "cuad_name": "Document Name",
+      "aliases": [],
+      "query": "agreement contract services service master maintenance consulting license licensing",
+      "semantic_query": "Find the formal title or name of the agreement, usually stated in the heading or opening sentence.",
+      "question": "What is the name of this agreement?",
+      "answer_type": "title"
+    },
+    {
+      "id": "parties",
+      "label": "合同当事方",
+      "cuad_name": "Parties",
+      "aliases": [],
+      "query": "agreement between among corporation company incorporated limited hereinafter party parties",
+      "semantic_query": "Find the legal names of every company or person that is a contracting party to the agreement.",
+      "question": "Who are the contracting parties?",
+      "answer_type": "entities"
+    },
+    {
+      "id": "agreement_date",
+      "label": "协议签署日期",
+      "cuad_name": "Agreement Date",
+      "aliases": [],
+      "query": "agreement dated date made entered executed execution as of day witness",
+      "semantic_query": "Find the date on which the agreement was signed, executed, made, or entered into, not merely a later effective date.",
+      "question": "What is the agreement date?",
+      "answer_type": "date"
+    },
+    {
+      "id": "effective_date",
+      "label": "生效日期",
+      "cuad_name": "Effective Date",
+      "aliases": [],
+      "query": "effective date effect commence commencement beginning begins execution executed",
+      "semantic_query": "Find the date on which the agreement becomes legally effective or begins to operate.",
+      "question": "When does the agreement become effective?",
+      "answer_type": "date"
+    },
+    {
+      "id": "expiration_date",
+      "label": "初始期限到期日期",
+      "cuad_name": "Expiration Date",
+      "aliases": [],
+      "query": "initial term expire expires expiration expiry end ends ending commence commencement anniversary years months",
+      "semantic_query": "Find when the initial contract term expires or ends, before considering optional or automatic renewals.",
+      "question": "When does the agreement expire?",
+      "answer_type": "date_or_perpetual"
+    },
+    {
+      "id": "governing_law",
+      "label": "适用法律",
+      "cuad_name": "Governing Law",
+      "aliases": [],
+      "query": "governing governed construed construction laws law state commonwealth jurisdiction conflicts",
+      "semantic_query": "Find the state, country, or jurisdiction whose laws govern and interpret the agreement.",
+      "question": "Which jurisdiction governs the agreement?",
+      "answer_type": "jurisdiction"
+    },
+    {
+      "id": "renewal_term",
+      "label": "续约期限",
+      "cuad_name": "Renewal Term",
+      "aliases": [],
+      "query": "renew renewal renewals renewed renewing automatically automatic successive extension extensions extended additional term",
+      "semantic_query": "Find whether the agreement renews and the length and mechanics of each renewal or extension period.",
+      "question": "What is the renewal term?",
+      "answer_type": "duration_or_perpetual"
+    },
+    {
+      "id": "notice_to_terminate_renewal",
+      "label": "终止续约通知期限",
+      "cuad_name": "Notice Period To Terminate Renewal",
+      "aliases": [
+        "Notice to Terminate Renewal",
+        "Notice To Terminate Renewal"
+      ],
+      "query": "renew renewal renewed automatically successive nonrenewal notice written prior days months terminate termination expiration",
+      "semantic_query": "Find how much advance notice a party must give to stop an automatic renewal or decline a renewal term.",
+      "question": "What advance notice is required to prevent renewal?",
+      "answer_type": "duration"
+    },
+    {
+      "id": "insurance",
+      "label": "保险义务",
+      "cuad_name": "Insurance",
+      "aliases": [],
+      "query": "insurance insured insurer coverage policies policy liability certificate maintain procure",
+      "semantic_query": "Find any obligation to obtain, maintain, prove, or provide insurance coverage or insurance certificates.",
+      "question": "Does the agreement impose insurance obligations?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "audit_rights",
+      "label": "审计权",
+      "cuad_name": "Audit Rights",
+      "aliases": [],
+      "query": "audit auditing auditor inspect inspection examine examination books records accounts access",
+      "semantic_query": "Find any right to audit, inspect, examine, or access another party's books, records, accounts, systems, or facilities.",
+      "question": "Does a party have audit or inspection rights?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "termination_for_convenience",
+      "label": "无因终止",
+      "cuad_name": "Termination For Convenience",
+      "aliases": [],
+      "query": "terminate termination convenience without cause any reason no reason at will notice",
+      "semantic_query": "Find whether a party may terminate the agreement without breach, default, or cause, including termination at will, for any reason, or at sole discretion.",
+      "question": "May a party terminate without cause?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "most_favored_nation",
+      "label": "最惠待遇",
+      "cuad_name": "Most Favored Nation",
+      "aliases": [],
+      "query": "favored favoured nation customer favorable favourable pricing parity lowest discount comparable offered match terms purchaser",
+      "semantic_query": "Find a promise to match a third party's more favorable prices, discounts or other terms for the buyer.",
+      "question": "Does a buyer receive terms as favorable as those given to other buyers?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "non_compete",
+      "label": "竞业限制",
+      "cuad_name": "Non-Compete",
+      "aliases": [],
+      "query": "compete competition competing competitor competitive engage operate business territorial territory geographic restricted indirectly",
+      "semantic_query": "Find a restriction on a party engaging in a competing business, operating in a territory or supplying competing technology.",
+      "question": "Does the agreement restrict a party from competing in a business or territory?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "exclusivity",
+      "label": "排他交易",
+      "cuad_name": "Exclusivity",
+      "aliases": [],
+      "query": "exclusive exclusively requirements sole supplier distributor procure purchase refrain third parties distribute",
+      "semantic_query": "Find an obligation to buy all requirements from one supplier, sell through one distributor or otherwise deal exclusively with a counterparty.",
+      "question": "Does the agreement require exclusive dealing with a counterparty?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "no_solicit_of_customers",
+      "label": "禁止招揽客户",
+      "cuad_name": "No-Solicit Of Customers",
+      "aliases": [],
+      "query": "solicit solicitation soliciting divert entice induce customers clients accounts partners business relationships",
+      "semantic_query": "Find a restriction on approaching, soliciting, diverting or doing business with customers or business partners of the counterparty.",
+      "question": "Does the agreement restrict solicitation of the other party's customers or partners?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "competitive_restriction_exception",
+      "label": "竞争限制的例外",
+      "cuad_name": "Competitive Restriction Exception",
+      "aliases": [],
+      "query": "except exceptions notwithstanding carveout carveouts permitted passive investment securities holdings existing customers restrictions compete exclusive",
+      "semantic_query": "Find a carveout permitting activities otherwise barred by a noncompete, exclusive dealing or customer nonsolicitation provision.",
+      "question": "Does the agreement provide exceptions to restrictions on competition, exclusivity or soliciting customers?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "no_solicit_of_employees",
+      "label": "禁止招揽员工",
+      "cuad_name": "No-Solicit Of Employees",
+      "aliases": [],
+      "query": "solicit solicitation recruit hire hiring employ induce entice employees personnel contractors recruiting resign employment",
+      "semantic_query": "Find restrictions on recruiting, hiring or inducing the other party's employees or contractors to leave.",
+      "question": "Does the agreement restrict solicitation or hiring of the other party's employees or contractors?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "non_disparagement",
+      "label": "禁止贬损",
+      "cuad_name": "Non-Disparagement",
+      "aliases": [],
+      "query": "disparage disparagement disparaging derogatory defame defamatory denigrate discredit adverse statements reputation goodwill",
+      "semantic_query": "Find a commitment to refrain from derogatory statements about a counterparty, its personnel or its business.",
+      "question": "Does a party agree to refrain from disparaging the counterparty?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "rofr_rofo_rofn",
+      "label": "优先购买、要约或谈判权",
+      "cuad_name": "Rofr/Rofo/Rofn",
+      "aliases": [],
+      "query": "refusal offer negotiation first right opportunity matching match bona fide rofr rofo rofn negotiate",
+      "semantic_query": "Find a counterparty's priority right to match a proposed deal, make the first offer or negotiate first for assets, products or technology.",
+      "question": "Does a party have a right of first refusal, first offer or first negotiation?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "change_of_control",
+      "label": "控制权变更",
+      "cuad_name": "Change Of Control",
+      "aliases": [],
+      "query": "change control ownership merger acquisition consolidation sale assets voting stock majority successor operation law",
+      "semantic_query": "Find consequences of a change in ownership or control, merger or asset sale, including consent, notice or termination rights.",
+      "question": "Does a change of control trigger notice, consent or a termination right?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "anti_assignment",
+      "label": "转让限制",
+      "cuad_name": "Anti-Assignment",
+      "aliases": [],
+      "query": "assign assignment assigned assignable delegate delegation transfer prior written consent permission approval notice",
+      "semantic_query": "Find restrictions, consent or notice requirements on assigning this agreement or delegating obligations to a third party.",
+      "question": "Does assignment of the agreement to another party require notice or consent?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "revenue_profit_sharing",
+      "label": "收入或利润分成",
+      "cuad_name": "Revenue/Profit Sharing",
+      "aliases": [],
+      "query": "revenue revenues profits proceeds share sharing split gross net receipts royalty royalties percentage sales",
+      "semantic_query": "Find provisions requiring one party to allocate a share of sales, receipts, revenue or profit to the other party.",
+      "question": "Must a party share revenue or profits with the counterparty?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "price_restrictions",
+      "label": "价格调整限制",
+      "cuad_name": "Price Restrictions",
+      "aliases": [],
+      "query": "price prices pricing increase increases adjustment escalation decrease ceiling floor maximum index resale discount",
+      "semantic_query": "Find a ceiling, floor, formula or approval condition that limits a party's ability to raise or reduce prices.",
+      "question": "Does the contract restrict a party's ability to change prices?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "minimum_commitment",
+      "label": "最低采购承诺",
+      "cuad_name": "Minimum Commitment",
+      "aliases": [],
+      "query": "minimum purchase purchases commitment order quantity quantities annual requirements volume shortfall take pay units",
+      "semantic_query": "Find minimum purchase quantities, monetary commitments or minimum orders that a buyer must meet in a period.",
+      "question": "Must a party purchase a minimum quantity or amount?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "volume_restriction",
+      "label": "超量使用限制",
+      "cuad_name": "Volume Restriction",
+      "aliases": [],
+      "query": "exceeds exceeding excess threshold volume usage overage capacity maximum limit additional fees users transactions",
+      "semantic_query": "Find consequences of exceeding an allowed volume or usage threshold, including approval, higher fees or other restrictions.",
+      "question": "Does use above a volume threshold trigger fees or require consent?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "ip_ownership_assignment",
+      "label": "知识产权归属与转让",
+      "cuad_name": "Ip Ownership Assignment",
+      "aliases": [],
+      "query": "ownership assign assigns assigned assignment intellectual property inventions developments deliverables work made hire title vest",
+      "semantic_query": "Find transfer or vesting of ownership of IP created by one party in the other, including work made for hire and contingent assignment.",
+      "question": "Does intellectual property created by one party become the counterparty's property?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "joint_ip_ownership",
+      "label": "知识产权共同所有",
+      "cuad_name": "Joint Ip Ownership",
+      "aliases": [],
+      "query": "joint jointly coowned ownership undivided interests developed inventions intellectual property co owners",
+      "semantic_query": "Find terms making both parties owners of intellectual property or allocating undivided interests in jointly created work.",
+      "question": "Do the parties jointly own intellectual property?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "license_grant",
+      "label": "许可授予",
+      "cuad_name": "License Grant",
+      "aliases": [],
+      "query": "license licence licensed hereby grant grants nonexclusive exclusive right use reproduce distribute sublicense exploit",
+      "semantic_query": "Identify an operative grant of rights to use intellectual property or technology from one contracting party to another. Mere access to products or services, delivery of goods, or an expected future license without an actual IP grant is insufficient.",
+      "question": "Does this agreement grant an operative license to use intellectual property or technology?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "non_transferable_license",
+      "label": "许可不可转让",
+      "cuad_name": "Non-Transferable License",
+      "aliases": [],
+      "query": "nontransferable transferable nonassignable assignable license licence transfer assignment sublicense personal consent",
+      "semantic_query": "First establish an operative intellectual-property license, then check restrictions on transfer of that license. General restrictions on assignment of the agreement alone do not prove a non-transferable license.",
+      "question": "Does this agreement restrict transfer of a granted license to a third party?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "affiliate_license_licensor",
+      "label": "许可方关联方授予许可",
+      "cuad_name": "Affiliate License-Licensor",
+      "aliases": [],
+      "query": "affiliates subsidiaries licensor licensors owned controlled intellectual property patents grant grants behalf",
+      "semantic_query": "Find license rights granted by the licensor's affiliates or covering intellectual property owned or controlled by those affiliates.",
+      "question": "Does the license cover grants or intellectual property of the licensor's affiliates?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "affiliate_license_licensee",
+      "label": "被许可方关联企业相关许可",
+      "cuad_name": "Affiliate License-Licensee",
+      "aliases": [],
+      "query": "affiliates subsidiaries licensee licensees sublicense sublicensees use benefit rights licensed persons authorized",
+      "semantic_query": "First establish an operative intellectual-property license, then check whether the licensee affiliates receive rights under that grant. Affiliate access to services alone is insufficient.",
+      "question": "Does the license grant extend to the licensee's affiliates?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "unlimited_all_you_can_eat_license",
+      "label": "不限量使用许可",
+      "cuad_name": "Unlimited/All-You-Can-Eat-License",
+      "aliases": [],
+      "query": "enterprise unlimited unrestricted users installs installations copies sites seats devices usage license",
+      "semantic_query": "Find a grant permitting unlimited use, users, copies or enterprise-wide deployment without a usage cap.",
+      "question": "Does a party receive an enterprise-wide or unlimited usage license?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "irrevocable_or_perpetual_license",
+      "label": "不可撤销或永久许可",
+      "cuad_name": "Irrevocable Or Perpetual License",
+      "aliases": [],
+      "query": "irrevocable irrevocably perpetual perpetuity permanently survive survives license grant duration perpetuality",
+      "semantic_query": "Find a license expressly granted in perpetuity or on irrevocable terms, including rights that survive termination indefinitely.",
+      "question": "Is a granted license irrevocable or perpetual?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "source_code_escrow",
+      "label": "源代码托管",
+      "cuad_name": "Source Code Escrow",
+      "aliases": [],
+      "query": "escrow deposit depository deposits agent release source code materials insolvency bankruptcy",
+      "semantic_query": "Find an obligation to deposit source code with an escrow agent and the conditions under which the other party may obtain it.",
+      "question": "Must a party deposit source code with an escrow agent?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "post_termination_services",
+      "label": "终止后服务",
+      "cuad_name": "Post-Termination Services",
+      "aliases": [],
+      "query": "termination expiration transition assistance migration wind down sell off inventory outstanding orders last buy return transfer",
+      "semantic_query": "Identify an affirmative obligation to provide services after termination or expiry, such as transition assistance, continued support, manufacturing or supply. Mere survival of confidentiality, payment of accrued debts, return of property or destruction of confidential information alone is insufficient.",
+      "question": "Must a party provide services after expiration or termination, such as transition assistance or continued support?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "uncapped_liability",
+      "label": "无上限责任",
+      "cuad_name": "Uncapped Liability",
+      "aliases": [],
+      "query": "uncapped unlimited limitation limitations exclude excluded exceptions notwithstanding indemnification infringement confidentiality apply cap",
+      "semantic_query": "Find unlimited liability or an exception that removes a liability cap for a specified claim or breach.",
+      "question": "Is liability unlimited for any obligation or category of breach?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "cap_on_liability",
+      "label": "责任上限",
+      "cuad_name": "Cap On Liability",
+      "aliases": [],
+      "query": "liability limitation aggregate maximum exceed cap capped fees paid amount claims brought period recovery",
+      "semantic_query": "Find monetary ceilings on recovery or contractual time limits for bringing claims, with the applicable scope and exceptions.",
+      "question": "Does the agreement cap liability or limit the time for bringing claims?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "liquidated_damages",
+      "label": "约定损害赔偿",
+      "cuad_name": "Liquidated Damages",
+      "aliases": [],
+      "query": "liquidated damages termination fee cancellation charge early penalty stipulated estimate compensation",
+      "semantic_query": "Find a pre-agreed sum for breach or a fee payable upon termination, together with its triggering event.",
+      "question": "Are liquidated damages or a termination fee payable?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "warranty_duration",
+      "label": "质保期限",
+      "cuad_name": "Warranty Duration",
+      "aliases": [],
+      "query": "warranty warranties warrants warranted defect defects errors workmanship materials period duration delivery acceptance months years",
+      "semantic_query": "Find how long a warranty against product, technology or service defects lasts, including its starting event and unit of time.",
+      "question": "Does this agreement specify a warranty period against defects or errors?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "covenant_not_to_sue",
+      "label": "不起诉承诺",
+      "cuad_name": "Covenant Not To Sue",
+      "aliases": [],
+      "query": "covenant sue assert claims challenge contest validity ownership infringement action nonassert enforce patents",
+      "semantic_query": "Find a covenant not to assert claims or contest the validity or ownership of the other party's intellectual property.",
+      "question": "Does the agreement restrict claims or challenges to the other party's intellectual property?",
+      "answer_type": "yes_no"
+    },
+    {
+      "id": "third_party_beneficiary",
+      "label": "第三方受益人",
+      "cuad_name": "Third Party Beneficiary",
+      "aliases": [],
+      "query": "beneficiary beneficiaries third parties enforce enforceable confer benefit rights remedies intended nonparty",
+      "semantic_query": "Find terms granting a nonparty beneficiary enforceable rights, including exclusions of third-party rights and express exceptions.",
+      "question": "May a nonparty beneficiary enforce any part of the agreement?",
+      "answer_type": "yes_no"
+    }
+  ]
+}

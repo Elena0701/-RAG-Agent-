@@ -1,0 +1,22 @@
+# Credentials
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+.txt
+run.txt
+# Runtime and local data
+data/
+outputs/
+.rag_cache/
+**/.rag_cache/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+agent-env/
+.pytest_cache/
+*.tmp
+# Local publishing workspace
+.publish-repo/

@@ -1,0 +1,9 @@
+# Validated local top-level versions; transitive packages are not fully locked.
+openai==3.28.0
+python-dotenv==1.2.4
+PyYAML==6.0.3
+numpy==2.5.4
+pypdf==6.21.4
+sentence-transformers==6.2.0
+torch==2.14.1
+transformers==5.20.2
