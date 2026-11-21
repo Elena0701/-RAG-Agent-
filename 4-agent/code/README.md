@@ -42,6 +42,7 @@ flowchart TD
 code/
 ├── main.py                         # CLI、工具组装、终端输出与对话保存
 ├── README.md / RUNNING.md           # 完整说明 / 启动与恢复速查
+├── TESTING_HANDOFF.md               # 面向测试同学的交接和验收说明
 ├── requirements.txt                # 兼容范围依赖
 ├── requirements-lock.txt           # 本地验证的顶层依赖版本
 ├── .env.example                    # 抽取服务配置模板，无真实密钥
@@ -58,7 +59,7 @@ code/
 │   │   └── rag_core/
 │   └── rules/                     # 规则引擎、36 类规则注册表与默认政策
 ├── tests/                          # 不调用外部 API 的回归测试
-└── evaluation/run_evaluation.py     # 原 11 类的抽样和本地指标计算
+└── examples/smoke_contract.txt       # 人工编写的虚构合同，供在线联调
 ```
 
 实际运行后会生成 `outputs/` 和 `tools/.rag_cache/`。原始数据、真实 `.env`、模型缓存和历史结果不随代码上传。
@@ -312,26 +313,25 @@ python -m unittest discover -s tests
 
 发布前在已有开发环境运行测试；准确通过数量见本次提交说明。离线测试通过不等于真实合同识别准确率达标，也不等于已在全新环境完成所有模型下载和在线测试。
 
-## 10. 原 11 类抽样评测
+## 10. 测试交接
 
-评测脚本当前仍针对原 11 类：Q1–Q8、Q16、Q34、Q39，尚不是完整 41 类评测器。
+面向测试同学的完整操作见 [TESTING_HANDOFF.md](TESTING_HANDOFF.md)，包括准备条件、虚构样本已知事实、逐项验收、异常定位、断点恢复和缺陷反馈模板。本目录不再提供数据集抽样和指标计算模块。
 
-自行准备 CUAD TXT 至本目录 `data/` 的任意子目录，并提供 `master_clauses` CSV；脚本以文件 stem 匹配。CSV 真值只在本地比较，不作为提示词发送给模型。
+建议按以下顺序接手：
+
+1. 安装依赖并配置两个模型服务，先运行不联网回归。
+2. 使用仓库提供的虚构合同，少量条款在线冒烟。
+3. 再运行全部 41 项，检查条款数量、证据、状态、人工列表和输出文件。
+4. 中途中断并恢复，验证已完成任务跳过及配置变化拒绝恢复。
+5. 提交测试记录和可复现缺陷；分开记录事实识别问题和正常业务政策转人工。
 
 ```powershell
-# 只生成固定随机种子的样本清单，不调用模型
-python evaluation\run_evaluation.py --gold "D:\datasets\master_clauses.csv" --output outputs\evaluation_demo --samples 5 --seed 20261120 --prepare-only
-
-# 实际运行：会向已配置的抽取/核验服务发送合同内容
-python evaluation\run_evaluation.py --gold "D:\datasets\master_clauses.csv" --output outputs\evaluation_demo --samples 5 --seed 20261120
-
-# 根据已保存结果重新计算指标，不调用模型
-python evaluation\run_evaluation.py --gold "D:\datasets\master_clauses.csv" --output outputs\evaluation_demo --samples 5 --seed 20261120 --score-only
+python -m unittest discover -s tests
+python main.py "examples\smoke_contract.txt" --clauses Q1 Q3 Q4 Q5 Q7 --max-retries 0 --output-dir outputs\handoff_smoke
+python main.py "examples\smoke_contract.txt" --output-dir outputs\handoff_full
 ```
 
-指标区分未核验候选与已通过核验答案，包含规范化精确匹配、token F1、布尔分类指标、覆盖/弃答统计和引文重合指标。缺失真值单独统计；未知预测不当作 No；技术失败不静默丢弃。这里的引文重合与答案匹配是项目自定义指标，不等同于官方 CUAD benchmark。
-
-样本清单持久化，已有单样本结果会跳过。修改模型或代码后做新实验，应使用新的输出目录，避免把旧结果与新结果混在一起。
+后两条命令会调用模型服务。虚构样本的 Q7 是续约通知 **30 days**，普通无因终止通知为 **60 days**，可用于检查这两类条款是否混淆。样本还包含明确不授予知识产权许可的约定，方便检查普通合同转让限制是否被误判成许可限制。
 
 ## 11. 41 类任务目录
 

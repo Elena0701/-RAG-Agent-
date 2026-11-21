@@ -1,0 +1,50 @@
+SAMPLE SERVICES AGREEMENT
+
+This fictional Sample Services Agreement is entered into on January 15, 2026,
+between Sample Provider Ltd. (the "Provider") and Sample Recipient Ltd.
+(the "Recipient"). This document is synthetic test data only.
+
+1. Effective Date and Initial Term
+This Agreement becomes effective on February 1, 2026. Its initial term expires
+on December 31, 2027.
+
+2. Renewal
+After the initial term, this Agreement automatically renews for successive
+periods of one year unless either party gives the other written notice of
+nonrenewal at least 30 days before expiration of the then-current term.
+
+3. Termination for Convenience
+Either party may terminate this Agreement without cause upon 60 days' prior
+written notice to the other party. This right is independent of the nonrenewal
+notice in Section 2.
+
+4. Services and Fees
+The Provider will provide monthly support services. The Recipient will pay
+a fixed monthly fee of USD 1,000 for those services.
+
+5. Governing Law
+This Agreement is governed by the laws of the State of California.
+
+6. Insurance
+During the term, the Provider must maintain commercial general liability
+insurance with coverage of at least USD 1,000,000 per occurrence for the
+benefit of the Recipient.
+
+7. Audit
+The Recipient may audit the Provider's records relating to fees charged under
+this Agreement once per calendar year upon 10 days' prior written notice.
+
+8. Assignment
+Neither party may assign this Agreement to a third party without the other
+party's prior written consent.
+
+9. No Intellectual Property License
+The provision of support services does not grant either party a license to
+the other party's intellectual property. No intellectual property license is
+granted under this Agreement.
+
+10. Confidential Information
+Each party must keep the other party's confidential information confidential.
+Upon termination, each party must return the other party's confidential
+documents. This return obligation does not require transition assistance or
+any continued services after termination.
