@@ -42,7 +42,6 @@ flowchart TD
 code/
 ├── main.py                         # CLI、工具组装、终端输出与对话保存
 ├── README.md / RUNNING.md           # 完整说明 / 启动与恢复速查
-├── TESTING_HANDOFF.md               # 面向测试同学的交接和验收说明
 ├── requirements.txt                # 兼容范围依赖
 ├── requirements-lock.txt           # 本地验证的顶层依赖版本
 ├── .env.example                    # 抽取服务配置模板，无真实密钥
@@ -58,8 +57,7 @@ code/
 │   │   ├── deepseek.local.env.example
 │   │   └── rag_core/
 │   └── rules/                     # 规则引擎、36 类规则注册表与默认政策
-├── tests/                          # 不调用外部 API 的回归测试
-└── examples/smoke_contract.txt       # 人工编写的虚构合同，供在线联调
+└── tests/                          # 不调用外部 API 的回归测试
 ```
 
 实际运行后会生成 `outputs/` 和 `tools/.rag_cache/`。原始数据、真实 `.env`、模型缓存和历史结果不随代码上传。
@@ -313,27 +311,7 @@ python -m unittest discover -s tests
 
 发布前在已有开发环境运行测试；准确通过数量见本次提交说明。离线测试通过不等于真实合同识别准确率达标，也不等于已在全新环境完成所有模型下载和在线测试。
 
-## 10. 测试交接
-
-面向测试同学的完整操作见 [TESTING_HANDOFF.md](TESTING_HANDOFF.md)，包括准备条件、虚构样本已知事实、逐项验收、异常定位、断点恢复和缺陷反馈模板。本目录不再提供数据集抽样和指标计算模块。
-
-建议按以下顺序接手：
-
-1. 安装依赖并配置两个模型服务，先运行不联网回归。
-2. 使用仓库提供的虚构合同，少量条款在线冒烟。
-3. 再运行全部 41 项，检查条款数量、证据、状态、人工列表和输出文件。
-4. 中途中断并恢复，验证已完成任务跳过及配置变化拒绝恢复。
-5. 提交测试记录和可复现缺陷；分开记录事实识别问题和正常业务政策转人工。
-
-```powershell
-python -m unittest discover -s tests
-python main.py "examples\smoke_contract.txt" --clauses Q1 Q3 Q4 Q5 Q7 --max-retries 0 --output-dir outputs\handoff_smoke
-python main.py "examples\smoke_contract.txt" --output-dir outputs\handoff_full
-```
-
-后两条命令会调用模型服务。虚构样本的 Q7 是续约通知 **30 days**，普通无因终止通知为 **60 days**，可用于检查这两类条款是否混淆。样本还包含明确不授予知识产权许可的约定，方便检查普通合同转让限制是否被误判成许可限制。
-
-## 11. 41 类任务目录
+## 10. 41 类任务目录
 
 | 编号 | 中文名称 | CUAD 类别 | 答案类型 |
 |---|---|---|---|
@@ -379,7 +357,7 @@ python main.py "examples\smoke_contract.txt" --output-dir outputs\handoff_full
 | Q40 | 不起诉承诺 | Covenant Not To Sue | BOOLEAN |
 | Q41 | 第三方受益人 | Third Party Beneficiary | BOOLEAN |
 
-## 12. 常见问题与当前边界
+## 11. 常见问题与当前边界
 
 - **401 / 无效密钥**：确认 Key 与 Base URL 属于同一平台，检查是否有进程环境变量覆盖 `.env`。
 - **额度、限流或网络错误**：查看具体失败阶段和模型错误；修复配置后开始新运行或恢复未完成任务。改写检索问句不能解决账单问题。
