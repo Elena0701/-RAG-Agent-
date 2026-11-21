@@ -252,9 +252,39 @@ ACCEPT 要求抽取完成、核验通过、No 覆盖充分、无阶段异常及�
 
 默认政策的部分适用性字段为 `null`，这是待业务确认的配置，会触发政策不完整提示；不要为了提高自动接收率随意改成 true / false。风险等级和阈值属于项目业务政策。
 
-## 8. 报告结构与终端展示
+## 8. 输出文件、对话记录与终端展示
 
-JSON 报告核心字段：
+程序提供三类主要输出：**JSON 审查报告用于读取结构化结果，对话记录用于回看本次运行过程，终端输出用于直接查看进度和结论**。断点文件另外用于恢复任务，不替代最终报告。
+
+下面路径以默认 `--output-dir outputs` 为例；指定其他目录时，所有文件随之保存到对应目录。
+
+| 输出 | 保存位置 / 通道 | 生成时机 | 主要用途 |
+|---|---|---|---|
+| JSON 审查报告 | `outputs/reports/{document_id}.json` | Agent 返回报告后 | 保存完整条款结果、证据、规则和人工事项 |
+| 最终对话记录 | `outputs/reports/{document_id}.conversation.json` | 中文报告生成后、正常收尾时 | 回看本次命令的用户配置、进度、报告和摘要 |
+| 即时过程记录 | `outputs/conversations/{run_uuid}.jsonl` | 运行开始创建，消息逐条追加 | 中断时保留已写入的配置和进度 |
+| 终端进度及中文报告 | `stderr` | 运行过程中及结束时 | 用户直接阅读，可重定向为日志 |
+| 最终机器可读摘要 | `stdout` | 输出文件保存后 | 获取状态、数量及输出文件路径 |
+| 逐项断点 | `outputs/checkpoints/{document_id}.checkpoint.json` | 运行初始化及每项完成后 | 通过 `--resume` 恢复，见第 6 节 |
+
+### 8.1 JSON 审查报告
+
+报告、最终对话记录及断点用相同的 `document_id` 关联。`document_id` 由合同文件名 stem 与随机后缀组成，同一合同独立重跑会生成不同标识；断点恢复沿用原标识。即时过程记录以每次命令的随机 UUID 命名，其实际路径由最终摘要的 `journal_path` 给出。
+
+报告顶层字段：
+
+| 字段 | 内容 |
+|---|---|
+| `document_id` | 本次合同审查标识 |
+| `filename` | 输入合同文件名 |
+| `status` | `COMPLETED`、`NEEDS_MANUAL_REVIEW` 或 `FAILED` |
+| `checks` | 所选条款的最终结果，按 Q 编号顺序排列 |
+| `manual_review_items` | 待人工复核条款、原因和证据包 |
+| `execution_logs` | 带时间戳的执行事件与状态；不是完整终端文本 |
+| `checkpoint_path` | 正常完成条款流程后的断点路径 |
+| `prepare_result` | 预处理失败时提供的解析结果与失败原因 |
+
+核心结构示例（仅示意字段，不代表真实运行结果）：
 
 ```json
 {
@@ -268,19 +298,89 @@ JSON 报告核心字段：
 }
 ```
 
-以上仅演示字段。正常运行时 `checks` 包含所选任务的结果；预处理失败会额外提供 `prepare_result`。
+正常运行时 `checks` 包含所选任务的结果。若预处理失败，`status` 为 FAILED、`checks` 为空，并提供 `prepare_result`；此时不保证存在所有正常成功路径的字段。
 
-条款结果中：
+每项 `checks` 中主要记录：
 
-- `category_answer`：候选或已核验答案。
-- `predicted_answers`：逐字原文证据，每项包含 `answer_start` 和 `text`。
-- `evidence_checks`：每条引文的位置检查和语义支持状态。
-- `overall_support`：整体支持状态、理由及 `evidence_indices`。这些索引指向本条款 `predicted_answers`，不是字符位置。
-- `review_results` / `rule_review`：规则命中、风险等级、审核理由、上下文意见和配置问题。
+| 字段 | 内容 |
+|---|---|
+| `question_id` / `category` | Q 编号及正式类别名 |
+| `category_answer` | 抽取出的候选答案；需结合核验状态判断是否可采信 |
+| `predicted_answers` | 逐字引文列表，每项包含 `answer_start` 和 `text` |
+| `processing_status` | 抽取阶段状态 |
+| `verification_status` | 整体证据核验状态 |
+| `coverage_status` / `coverage_detail` | 候选 No 的覆盖状态、依据及遗漏位置等详情 |
+| `evidence_checks` | 各引文的位置匹配和语义支持状态 |
+| `overall_support` | 整体语义判断、`reason` 及支持引文的 `evidence_indices` |
+| `review_results` / `rule_review` | 规则结果、风险等级、理由、上下文意见和配置问题 |
+| `retry_count` / `retrieval_history` | 补查次数、历次问句及返回的 chunk ID |
+| `stage_error` / `attempt_history` | 异常阶段及各轮尝试结果 |
+| `next_action` / `needs_manual_review` | 最终处理动作与是否待人工复核 |
 
-`answer_start` 是 **规范化合同文本中从 0 开始的字符偏移**，不是 PDF 字节位置，也不是原始 TXT 未规范化时的偏移。程序检查 `context[start:start+len(text)] == text`。同一短语在指定 chunk 中重复且无法唯一定位时不会猜测位置。
+并非每条分支都有全部可选字段。例如未执行语义核验时可能没有 `overall_support`，应结合 `reason`、`diagnostic_codes` 或 `extraction_reason` 阅读。风险等级从具体命中的规则结果中读取，不要假设每项条款顶层都有 `risk_level`。
 
-终端先展示合同名称、类型、当事方及各所选条款的答案、处理结果、必要的风险和转人工原因，再展示有答案（包括候选答案）的证据溯源和审核意见，最后给出统计及保存路径。没有答案的条款不会出现在证据详情中，但会出现在总体条款状态和人工列表中。合同类型是标题启发式归类，不是单独训练的类型分类器；当事方角色仅在证据支持时展示。
+证据字段的含义：
+
+- `answer_start` 是 **规范化合同文本中从 0 开始的字符偏移**，不是 PDF 字节位置，也不是原始 TXT 未规范化时的偏移。
+- 程序检查 `context[start:start+len(text)] == text`。同一短语在指定 chunk 中重复且无法唯一定位时不会猜测位置。
+- `evidence_indices` 指向本条款 `predicted_answers` 中的元素，既不是字符偏移，也不是条款编号。
+- 候选 No 可以没有引文，但必须满足对应覆盖和全文核验条件，不能只看 `category_answer` 就认为已通过。
+
+### 8.2 最终对话记录：`.conversation.json`
+
+文件保存本次命令对应的用户配置与 Agent 展示消息，采用 `role` / `content` 结构，便于按聊天消息回放：
+
+```json
+{
+  "document_id": "example_12345678",
+  "messages": [
+    {"role": "user", "content": "审查合同、所选条款、抽取模型及运行参数"},
+    {"role": "assistant", "content": "运行进度消息"},
+    {"role": "assistant", "content": "最终中文合同审查报告"},
+    {"role": "assistant", "content": "最终JSON摘要文本"}
+  ]
+}
+```
+
+实际记录包含：
+
+1. `user`：合同路径、所选条款、抽取模型、top-k、最大补查次数、输出目录和业务政策。
+2. `assistant`：解析、检索、抽取、核验、规则、补查及转人工等进度消息。
+3. `assistant`：完整中文终端审查报告。
+4. `assistant`：包含结果数量和文件路径的最终摘要，作为字符串保存在 `content` 中。
+
+这是 **运行配置与用户可见消息的记录**，不等于完整保存每次底层模型请求、提示词和响应。它在运行收尾时写入，若进程提前中断，可能尚不存在。
+
+### 8.3 即时过程记录：`.jsonl`
+
+JSONL 文件每行是一个独立的消息对象，运行时逐条追加，无需等待全部条款完成：
+
+```jsonl
+{"role":"user","content":"审查配置"}
+{"role":"assistant","content":"📄 开始审查合同……"}
+{"role":"assistant","content":"🔎 正在检索合同片段……"}
+```
+
+正常结束时也会写入中文报告和最终摘要。中断时，已写入的消息仍可查看；下一次恢复命令创建新的 JSONL，不会把多次命令自动合并成一份完整聊天历史。最终 `.conversation.json` 使用相同 document_id 的固定路径，恢复后收尾会重写该文件，内容对应恢复这次命令的展示过程。
+
+JSONL 记录的是主入口追加的用户配置和 `progress()` 消息，**不是操作系统级的完整 stdout / stderr 录制**。参数错误、外部库直接打印的日志或未捕获异常的 traceback 不保证进入该文件；需要排查这些输出时应另外保存终端重定向日志。
+
+### 8.4 终端输出
+
+运行中会显示面向用户的节点提示，例如：
+
+```text
+📄 开始审查合同……
+🔎 正在检索合同片段……
+🧠 正在调用模型抽取答案……
+✅ 核验通过……
+📏 正在检查业务规则……
+🔄 正在补查…… / 👤 转人工复核……
+```
+
+结束后先展示合同名称、类型、当事方及各所选条款的答案、处理结果、必要的风险和转人工原因，再展示有答案（包括候选答案）的证据溯源和审核意见，最后给出统计及保存路径。
+
+没有答案的条款不会出现在证据详情中，但会出现在总体条款状态和人工列表中。合同类型是标题启发式归类；当事方角色仅在证据支持时展示。
 
 展示片段（仅为格式示例，不是实验结果）：
 
@@ -298,6 +398,25 @@ JSON 报告核心字段：
 📊 共审查 N 项，自动接收 A 项，待人工复核 B 项。
 💾 报告已保存：outputs\reports\example_12345678.json
 ```
+
+进度和中文报告写入 stderr；stdout 最后输出的是 **运行摘要**，不是整个审查报告。摘要包含 `document_id`、`status`、`check_count`、`manual_review_count`、`report_path`、`conversation_path`、`checkpoint_path`、`journal_path`。
+
+分别保存两个终端通道：
+
+```powershell
+python main.py "D:\contracts\example.txt" 1> summary.json 2> terminal.log
+```
+
+`summary.json` 用于程序获取结果位置，`terminal.log` 用于阅读进度、中文报告及终端错误；完整结构化审查结果仍应读取 `report_path` 指向的报告文件。只有正常执行到最终打印时 stdout 才包含该 JSON 摘要，中途失败不能假设重定向文件一定是有效 JSON。
+
+### 8.5 中断后的文件可用性
+
+| 情形 | 可以查看的内容 |
+|---|---|
+| 运行尚未结束或用户中断 | 已写入的 JSONL、已保存的逐项断点；不保证有最终报告和最终对话记录 |
+| 正常完成，包含转人工项 | 最终 JSON 报告、最终对话记录、JSONL、断点及 stdout 摘要 |
+| 预处理返回 FAILED 并完成收尾 | 失败 JSON 报告和对应展示记录；通过 `prepare_result` 查看失败原因 |
+| 参数错误或程序提前异常退出 | 查看 stderr / 重定向日志；不保证所有输出文件均生成 |
 
 ## 9. 测试
 
