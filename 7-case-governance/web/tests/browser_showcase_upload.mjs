@@ -1,0 +1,96 @@
+// Local file selection and hash matching only; offline Chrome, zero model/backend calls.
+import {createRequire} from 'node:module';
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import crypto from 'node:crypto';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+const require=createRequire(import.meta.url);
+const {chromium}=require(path.resolve(path.dirname(process.execPath),'../node_modules/playwright'));
+const web=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),qa=path.join(web,'qa'),dist=path.join(web,'showcase/dist');
+const source004=await fs.readFile(path.join(dist,'sample_contracts/CUAD-004.txt'));
+const source001=await fs.readFile(path.join(dist,'sample_contracts/CUAD-001.txt'));
+const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-background-networking','--no-first-run']});
+const context=await browser.newContext({viewport:{width:1440,height:1000},acceptDownloads:true});await context.setOffline(true);
+const page=await context.newPage(),checks=[],errors=[],requests=[];
+page.on('pageerror',e=>errors.push(e.message));context.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
+const assert=(ok,label)=>{if(!ok)throw new Error(label);checks.push({check:label,status:'PASS'});console.log('PASS',label);};
+const workbench=async()=>{await page.evaluate(()=>go('workbench'));await page.waitForSelector('#contract-file',{state:'attached'});};
+const read=async(name,bytes)=>{await page.setInputFiles('#contract-file',{name,mimeType:name.endsWith('.pdf')?'application/pdf':'text/plain',buffer:bytes});await page.waitForFunction(()=>!scReading&&!!scContract&&(!!scContract.sha||!!scContract.error));};
+const rows=()=>page.locator('#report-rows tr[data-evidence]');
+try{
+  await page.goto(pathToFileURL(path.join(dist,'index.html')).href);await page.waitForSelector('#contract-file',{state:'attached'});
+  assert(await page.locator('#page-title').innerText()==='审查工作台','default landing and navigation match the live workbench name');
+  assert(await page.locator('.workbench-grid>div #upload-zone').count()===1&&await page.locator('.workbench-grid>aside #match-review').count()===1,'upload/selection on left and parameters/action on right mirror the live layout');
+  assert(await page.locator('.clause-check').count()===41&&await page.locator('.group-check').count()===4,'all 41 bilingual catalog entries and four groups are available');
+  assert(await page.locator('#top-k').isDisabled()&&await page.locator('#retry-limit').isDisabled(),'saved Agent parameters are read-only, not pretend new-run settings');
+  assert((await page.locator('#match-review').innerText()).includes('匹配并查看真实审查记录'),'primary action explicitly matches history rather than starts AI');
+  await page.click('#match-review');assert((await page.locator('#toast').innerText()).includes('请先选择'),'missing file is rejected');
+  await read('CUAD-004.txt',source004);
+  assert(await page.evaluate(()=>scContract.sha)===sha(source004),'SHA-256 is computed from actual complete selected bytes');
+  assert((await page.locator('#file-meta').innerText()).includes('CUAD-004.txt'),'real filename and size appear after local reading');
+  await page.locator('#showcase-file-preview summary').click();
+  assert(await page.locator('#local-contract-preview').isVisible()&&await page.locator('#local-contract-preview').innerText()===Array.from(source004.toString('utf8')).slice(0,20000).join(''),'TXT preview shows the actual unnormalized source excerpt');
+  assert((await page.locator('#showcase-file-preview summary').innerText()).includes('20,000'),'long preview truncation is explicit; full bytes still used for matching');
+  await page.locator('#showcase-file-preview summary').click();
+  await page.click('[data-preset="none"]');await page.click('#match-review');assert((await page.locator('#toast').innerText()).includes('至少选择一个'),'empty clause selection is rejected');
+  await page.locator('.group-check').first().check();assert(await page.locator('.clause-check:checked').count()===8,'group selection selects its eight actual categories');
+  await page.click('[data-preset="focus"]');assert(await page.locator('.clause-check:checked').count()===5,'focus shortcut chooses Q16 Q18 Q19 Q35 Q36');
+  if(await page.locator('#toast.visible .toast-close').count())await page.locator('#toast.visible .toast-close').click();
+  await page.screenshot({path:path.join(qa,'showcase_upload_workbench_1440.png'),fullPage:false});
+  await page.click('#match-review');await page.waitForSelector('#report-rows tr[data-evidence]');
+  assert(await rows().count()===5,'matching CUAD-004 shows the five requested existing categories');
+  assert((await rows().first().getAttribute('data-evidence'))==='Q16','selected result order uses current catalog numbering');
+  assert((await page.locator('#showcase-selection-scope').innerText()).includes('原报告完整的41项'),'view scope is distinguished from full original report coverage');
+  assert(await page.evaluate(()=>state.report.stats.reviewed)===41&&(await page.locator('.metric-value').first().innerText()).includes('41'),'original 41-item statistics are unchanged by five-clause selection');
+  await page.fill('#report-search','Q19');assert(await rows().count()===1,'table search operates within selected categories');await page.fill('#report-search','');
+  await page.click('#showcase-full-report');assert(await rows().count()===41,'full original report button restores all actual reviewed rows');
+  await workbench();const downloadEvent=page.waitForEvent('download');await page.locator('[data-download-contract]').first().click();const sample=await downloadEvent;
+  assert(sha(await fs.readFile(await sample.path()))===sha(source001),'downloadable TXT is byte-identical to its original CUAD context');
+  await read('renamed_<img src=x onerror=alert(1)>.txt',source004);
+  assert(await page.locator('#file-meta img').count()===0,'untrusted filename is text-escaped');
+  await page.click('[data-preset="all"]');assert(await page.locator('.clause-check:checked').count()===41,'all shortcut selects every catalog category');
+  await page.click('#match-review');await page.waitForSelector('#showcase-selection-scope');
+  assert(await page.evaluate(()=>state.report.identity.document_id)==='CUAD-004_7afb02da','renamed but byte-identical contract matches by content, not filename');
+  await workbench();await read('CUAD-001.txt',source001);await page.click('[data-preset="basic"]');await page.click('#match-review');await page.waitForSelector('#showcase-selection-scope');
+  assert(await rows().count()===5&&(await page.locator('#showcase-selection-scope').innerText()).includes('未审查5类'),'selected categories absent from a five-clause report are explicitly unreviewed');
+  assert((await page.locator('#report-rows .answer').allTextContents()).every(x=>x==='未审查'),'missing selected categories are not turned into No or accepted results');
+  assert(await page.evaluate(()=>state.report.stats.reviewed)===5,'unreviewed placeholders do not change original task count');
+  await page.selectOption('#status-filter','NOT_REVIEWED');assert(await rows().count()===5,'unreviewed filter remains restricted to selected categories');
+  await workbench();await page.click('[data-preset="all"]');await page.click('#match-review');await page.waitForSelector('#showcase-selection-scope');
+  assert(await rows().count()===41,'all selection includes actual five results plus 36 clearly unreviewed placeholders');
+  await page.selectOption('#status-filter','NOT_REVIEWED');assert(await rows().count()===36,'36 missing categories are correctly counted as unreviewed');
+  const originalHash=await page.evaluate(()=>state.report.report_sha256);const nativeEvent=page.waitForEvent('download');await page.locator('a[href$="/download"]').click();
+  assert(sha(await fs.readFile(await(await nativeEvent).path()))===originalHash,'view selection never alters downloaded native report bytes');
+  await workbench();await read('CUAD-004.txt',Buffer.concat([source004,Buffer.from('\n')]));await page.click('#match-review');
+  assert((await page.locator('#showcase-match-state').innerText()).includes('未找到对应历史报告')&&await page.evaluate(()=>state.view)==='workbench','same name with changed bytes has no match and never redirects to an unrelated result');
+  await read('unknown.txt',Buffer.from('<img src=x onerror="window.__injected=true"> LOCAL CONTRACT'));
+  assert(await page.locator('#local-contract-preview img').count()===0&&await page.evaluate(()=>!window.__injected),'contract markup is displayed as text and never executed');
+  await read('CONTROLLED_header_only.pdf',Buffer.from('%PDF-1.7\nCONTROLLED header-only fixture, not a parsed contract\n%%EOF'));
+  assert((await page.locator('#main-view').innerText()).includes('不解析PDF正文')&&await page.locator('#local-contract-preview').count()===0,'PDF input exposes information and hash only, without invented extracted text');
+  await page.click('#match-review');assert((await page.locator('#showcase-match-state').innerText()).includes('未找到对应历史报告'),'unknown PDF does not obtain a false saved report');
+  for(const [name,bytes]of [['bad.exe',Buffer.from('x')],['empty.txt',Buffer.alloc(0)],['latin.txt',Buffer.from([255])],['binary.txt',Buffer.from([0])],['fake.pdf',Buffer.from('not a PDF')],['large.txt',Buffer.alloc(10*1024*1024+1,120)]]){
+    await read(name,bytes);assert(await page.evaluate(()=>!!scContract.error&&!scContract.sha),`${name} is rejected before historical matching`);
+  }
+  const transferred=await page.evaluateHandle(()=>{const d=new DataTransfer();d.items.add(new File(['CONTROLLED drag input'],'dragged.txt',{type:'text/plain'}));return d;});
+  await page.dispatchEvent('#upload-zone','drop',{dataTransfer:transferred});await page.waitForFunction(()=>!scReading&&scContract?.name==='dragged.txt'&&!!scContract.sha);
+  assert((await page.locator('#file-meta').innerText()).includes('dragged.txt'),'actual drag-and-drop handler reads the selected local file');
+  await page.click('#clear-contract');assert(await page.locator('#file-meta').innerText()===''&&await page.locator('#showcase-match-state').innerText()==='','remove button clears file, preview, fingerprint and match state');
+  await page.evaluate(async()=>{let resolve;const old=scChooseContract({name:'CONTROLLED_delayed.txt',size:3,arrayBuffer:()=>new Promise(r=>resolve=r)});await scChooseContract(new File(['new file'],'CONTROLLED_new.txt'));resolve(new TextEncoder().encode('old').buffer);await old;});
+  assert(await page.evaluate(()=>scContract.name==='CONTROLLED_new.txt'),'late file reads cannot overwrite a newer selected file');
+  await read('CUAD-004.txt',source004);
+  // Controlled duplicate index entry only, not a fabricated natural Agent output.
+  const realId=await page.evaluate(()=>{const actual=[...SC_CASES.values()].find(c=>c.identity.sample==='CUAD-004');const copy=scClone(actual);copy.identity.id='CONTROLLED_DUPLICATE_INDEX';copy.identity.document_id='CONTROLLED_DUPLICATE_INDEX';SC_CASES.set(copy.identity.id,copy);return actual.identity.id;});
+  await page.click('#match-review');await page.waitForSelector('#showcase-report-choice');
+  assert(await page.locator('#showcase-report-choice option').count()===3,'ambiguous contract hashes require an explicit report choice');
+  await page.selectOption('#showcase-report-choice',realId);await page.click('#match-review');await page.waitForSelector('#showcase-selection-scope');
+  assert(await page.evaluate(()=>state.report.identity.document_id)==='CUAD-004_7afb02da','explicit choice opens the selected actual saved run');
+  await page.evaluate(()=>{SC_CASES.delete('CONTROLLED_DUPLICATE_INDEX');state.reports=scRows();fillCases();});
+  await workbench();
+  for(const width of [1920,1280,390]){await page.setViewportSize({width,height:width===390?844:1000});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`${width}px unified upload workbench has no page overflow`);}
+  if(await page.locator('#toast.visible .toast-close').count())await page.locator('#toast.visible .toast-close').click();await page.screenshot({path:path.join(qa,'showcase_upload_workbench_mobile.png')});
+  assert(requests.length===0,'local upload, selection and matching send zero HTTP requests');
+  assert(errors.length===0,'unified workbench interactions have no browser JavaScript errors');
+  await fs.writeFile(path.join(qa,'showcase_upload_browser_results.json'),JSON.stringify({status:'PASS',model_api_calls:0,scope:'offline local file reads and saved-report matching; PDF header, delayed read and duplicate index are controlled fixtures only',checks,errors,requests},null,2));
+}catch(error){await page.screenshot({path:path.join(qa,'showcase_upload_failure.png')});await fs.writeFile(path.join(qa,'showcase_upload_browser_results.json'),JSON.stringify({status:'FAIL',error:error.message,checks,errors,requests,model_api_calls:0},null,2));throw error;}
+finally{await browser.close();}
