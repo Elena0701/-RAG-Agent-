@@ -1,0 +1,11 @@
+data/
+qa/
+__pycache__/
+*.py[cod]
+.env
+*.local.env
+*.sqlite3*
+*.db
+*.log
+*.tmp
+node_modules/
