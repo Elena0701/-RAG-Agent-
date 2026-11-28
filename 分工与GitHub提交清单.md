@@ -1,5 +1,22 @@
 # 分工与 GitHub 提交清单
 
+> 核对日期：2026-11-29。原有 DDL 和成员交付表保留为历史计划，计划文件名不代表已经上传。实际文件以 [完整文件清单](文件清单.md) 和下节核对为准；此处只确认文件存在，不代替内容验收或实验复现。
+
+## 最新文件与原计划的对应核对
+
+- **成员 1：**已有 problem_and_data.md、sample_manifest_draft.csv、第一章来源与口径说明及 Word；计划中的最终 sample_manifest.csv 尚未出现，不能将草案标为最终样本清单。
+- **成员 2：**已有 theory_and_design.md、references.md 和 agent_rag_review_flow.png。
+- **成员 3：**规则代码实际位于 rules/，文字说明在 docs/，另有 README.md、environment.yml。原计划 risk_rules.md、rule_case.md、test_rules.py 未以这些名称提交。模块 README 说明测试仅保留本地，测试结论不等于仓库附有测试文件。
+- **成员 4：**已有 agent_system.md、中文命名流程图、第四部分 Word，以及 code/ 下 41 类主程序、集成 RAG／规则工具、测试、配置模板和运行说明。原生执行日志与报告未随代码提交。
+- **成员 5：**已有 retrieval.md、retrieval_case.md、可调用 RAG 模块、联调说明、测试、评测脚本和 results/*.json。41 类与旧版结果口径见 results/README.md，不可混引。
+- **成员 6：**实际为“第六部分_基准实验设计.md”和“第六章 基准实验与结果分析.md”，对应方案和结果文字；本目录尚无计划中的 experiments/、results/metrics.csv、独立图表或逐条实验记录。成员 5 的检索结果不能直接视为成员 6 完整 Agent 对照实验的原始记录。
+- **成员 7：**完整案例实际为 case.md，另有 failure_cases.md、limitations_and_governance.md；新增 web/ 实时网站与 web/showcase/dist/index.html 自包含展示版。原生 contracts/、annotations/、results/ 目录未提交，独立 HTML 内嵌的三个案例仍可直接演示。
+- **成员 8：**当前有“金融人工智能小组汇报-第一组.pdf”；计划中的 pre_1107.pptx、pre_1107_notes.md、final_paper.docx/pdf、final_slides.pptx、submission_checklist.md 尚未出现。现有汇报 PDF 不代表全部最终整合材料已经交齐。
+
+运行和下载说明见 [根目录 README](README.md)。展示版可双击查看既有案例；实时版下载整个仓库后，可在自己的电脑配置环境与模型服务运行，不依赖原作者电脑。
+
+## 原定分工与时间安排（历史计划）
+
 汇报时间：11 月 7 日下午。最终提交：11 月 30 日。  
 所有成员须提交自己负责部分的文字说明及配套材料。标注为 **【合并用】** 的文件必须写成可直接纳入 PPT／论文的完整文字或结果；第 8 位负责汇总、统一格式和标注缺项，不代写他人内容。
 
